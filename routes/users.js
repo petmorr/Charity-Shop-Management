@@ -2,18 +2,20 @@ const express = require('express');
 const usersDb = require('../models/user');
 const router = express.Router();
 
-router.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  usersDb.findOne({ username, password }, (err, user) => {
-    if (err || !user) return res.status(401).send('Login failed');
-    req.session.user = user;
-    res.redirect('/dashboard'); // Or wherever you want to redirect after login
+router.post('/', (req, res) => {
+  const newUser = req.body;
+  usersDb.insert(newUser, (err, user) => {
+    if (err) return res.status(500).send(err);
+    res.status(201).send(user);
   });
 });
 
-router.post('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/login');
+router.delete('/:id', (req, res) => {
+  const userId = req.params.id;
+  usersDb.remove({ _id: userId }, {}, (err, numRemoved) => {
+    if (err) return res.status(500).send(err);
+    res.sendStatus(200);
+  });
 });
 
 module.exports = router;

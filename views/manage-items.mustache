@@ -1,19 +1,37 @@
-{{> header}}
-<h1>Manage Items</h1>
-<form action="/items" method="post">
-  <input type="text" name="name" placeholder="Item Name">
-  <input type="text" name="description" placeholder="Item Description">
-  <input type="number" name="price" placeholder="Item Price">
-  <input type="text" name="store" placeholder="Store">
-  <button type="submit">Add Item</button>
-</form>
-<ul>
-  {{#items}}
-  <li>{{name}} - {{description}} - £{{price}} - Available at {{store}}
-    <form action="/items/{{_id}}" method="post" style="display:inline;">
-      <input type="hidden" name="_method" value="DELETE">
-      <button type="submit">Delete</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Items</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  {{> header}}
+  <div class="container">
+    <h1>Manage Items</h1>
+    <form action="/items" method="post">
+      <label for="name">Item Name:</label>
+      <input type="text" id="name" name="name" placeholder="Item Name" required>
+      <label for="description">Item Description:</label>
+      <input type="text" id="description" name="description" placeholder="Item Description" required>
+      <label for="price">Item Price:</label>
+      <input type="number" id="price" name="price" placeholder="Item Price" required>
+      <label for="store">Store:</label>
+      <input type="text" id="store" name="store" placeholder="Store" required>
+      <button type="submit">Add Item</button>
     </form>
-  </li>
-  {{/items}}
-</ul>
+    <ul>
+      {{#items}}
+      <li>{{name}} - {{description}} - £{{price}} - Available at {{store}}
+        <form action="/items/{{_id}}" method="post" style="display:inline;">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+      {{/items}}
+    </ul>
+  </div>
+  <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
+</body>
+</html>

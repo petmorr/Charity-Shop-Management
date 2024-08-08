@@ -13,7 +13,7 @@ router.post('/login', (req, res) => {
   usersDb.findOne({ username, password }, (err, user) => {
     if (err || !user) return res.status(401).send('Login failed');
     req.session.user = user;
-    res.redirect('/dashboard'); // Redirect to dashboard or another route after login
+    res.redirect('/dashboard');
   });
 });
 

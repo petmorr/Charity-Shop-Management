@@ -1,9 +1,23 @@
-{{> header}}
-<h1>{{title}}</h1>
-<form action="/auth/login" method="post">
-  <label for="username">Username:</label>
-  <input type="text" id="username" name="username" required>
-  <label for="password">Password:</label>
-  <input type="password" id="password" name="password" required>
-  <button type="submit">Login</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  {{> header}}
+  <div class="container">
+    <h1>{{title}}</h1>
+    <form action="/auth/login" method="post">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+  <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
+</body>
+</html>
