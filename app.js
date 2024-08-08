@@ -38,7 +38,7 @@ app.use('/auth', require('./routes/auth'));
 
 // Home route
 app.get('/', (req, res) => {
-  res.redirect('/about'); // Or render a home page
+  res.redirect('/about');
 });
 
 // Start the server
