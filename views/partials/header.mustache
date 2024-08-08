@@ -1,20 +1,24 @@
-<header>
-  <nav>
-    <ul>
-      <li><a href="/about">About Us</a></li>
-      <li><a href="/items">Items in Stock</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Charity Shop</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+      <li class="nav-item"><a class="nav-link" href="/items">Items in Stock</a></li>
       {{#user}}
-      <li><a href="/dashboard">Dashboard</a></li>
-      <li><a href="/manage-items">Manage Items</a></li>
+      <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+      <li class="nav-item"><a class="nav-link" href="/manage-items">Manage Items</a></li>
       {{#manager}}
-      <li><a href="/manage-volunteers">Manage Volunteers</a></li>
+      <li class="nav-item"><a class="nav-link" href="/manage-volunteers">Manage Volunteers</a></li>
       {{/manager}}
-      <li><a href="/auth/logout">Logout</a></li>
+      <li class="nav-item"><a class="nav-link" href="/auth/logout">Logout</a></li>
       {{/user}}
       {{^user}}
-      <li><a href="/auth/login">Login</a></li>
-      <li><a href="/auth/register">Register</a></li>
+      <li class="nav-item"><a class="nav-link" href="/auth/login">Login</a></li>
+      <li class="nav-item"><a class="nav-link" href="/auth/register">Register</a></li>
       {{/user}}
     </ul>
-  </nav>
-</header>
+  </div>
+</nav>

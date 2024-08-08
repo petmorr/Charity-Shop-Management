@@ -61,12 +61,12 @@ router.post('/api/login', [
 
 // Route to handle logout
 router.get('/logout', (req, res) => {
+  req.flash('success', 'Logged out successfully.'); // Set the flash message
   req.session.destroy((err) => {
     if (err) {
       req.flash('error', 'Failed to logout. Please try again.');
       return res.redirect('/dashboard');
     }
-    req.flash('success', 'Logged out successfully.');
     res.redirect('/auth/login');
   });
 });

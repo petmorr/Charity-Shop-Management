@@ -1,46 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-  {{> partials/header}}
-  <div class="container">
-    {{#messages.error}}
-    <div class="alert alert-danger">
-      {{.}}
-    </div>
-    {{/messages.error}}
-    {{#messages.success}}
-    <div class="alert alert-success">
-      {{.}}
-    </div>
-    {{/messages.success}}
-    <h1>Manage Items</h1>
-    <form action="/manage-items/api" method="post">
-      <label for="name">Item Name:</label>
-      <input type="text" id="name" name="name" placeholder="Item Name" required>
-      <label for="description">Item Description:</label>
-      <input type="text" id="description" name="description" placeholder="Item Description" required>
-      <label for="price">Item Price:</label>
-      <input type="number" id="price" name="price" placeholder="Item Price" required>
-      <label for="store">Store:</label>
-      <input type="text" id="store" name="store" placeholder="Store" required>
-      <button type="submit">Add Item</button>
-    </form>
-    <ul>
-      {{#items}}
-      <li>{{name}} - {{description}} - £{{price}} - Available at {{store}}
-        <form action="/manage-items/api/{{_id}}?_method=DELETE" method="post" style="display:inline;">
-          <button type="submit">Delete</button>
-        </form>
-      </li>
-      {{/items}}
-    </ul>
+{{> layout }}
+<h1 class="my-4">{{title}}</h1>
+<form action="/manage-items/api" method="post" enctype="multipart/form-data" class="mb-4">
+  <div class="form-group">
+    <label for="name">Item Name:</label>
+    <input type="text" class="form-control" id="name" name="name" placeholder="Item Name" required>
   </div>
-  <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
-</body>
-</html>
+  <div class="form-group">
+    <label for="description">Item Description:</label>
+    <input type="text" class="form-control" id="description" name="description" placeholder="Item Description" required>
+  </div>
+  <div class="form-group">
+    <label for="price">Item Price:</label>
+    <input type="number" class="form-control" id="price" name="price" placeholder="Item Price" required>
+  </div>
+  <div class="form-group">
+    <label for="store">Store:</label>
+    <input type="text" class="form-control" id="store" name="store" placeholder="Store" required>
+  </div>
+  <div class="form-group">
+    <label for="image">Item Image:</label>
+    <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+  </div>
+  <button type="submit" class="btn btn-primary">Add Item</button>
+</form>
+<ul class="list-group">
+  {{#items}}
+  <li class="list-group-item">
+    <div class="d-flex justify-content-between">
+      <div>
+        <img src="{{image}}" alt="{{name}}" style="max-width: 100px; margin-right: 20px;">
+        <strong>{{name}}</strong> - {{description}} - £{{price}} - Available at {{store}}
+      </div>
+      <form action="/manage-items/api/{{_id}}?_method=DELETE" method="post" class="ml-auto">
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+      </form>
+    </div>
+  </li>
+  {{/items}}
+</ul>

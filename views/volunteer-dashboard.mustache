@@ -1,20 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-  {{> partials/header}}
-  <div class="container">
-    <h1>{{title}}</h1>
-    <p>Welcome, {{user.username}}!</p>
-    <ul>
-      <li><a href="/manage-items">Manage Items</a></li>
-    </ul>
+{{> layout }}
+<h1 class="my-4">Volunteer Dashboard</h1>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Manage Items</h5>
+        <p class="card-text">Add, update, or delete items in stock.</p>
+        <a href="/manage-items" class="btn btn-primary">Go to Manage Items</a>
+      </div>
+    </div>
   </div>
-  <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
-</body>
-</html>
+</div>

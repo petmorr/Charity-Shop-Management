@@ -1,35 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-  {{> partials/header}}
-  <div class="container">
-    {{#messages.error}}
-    <div class="alert alert-danger">
-      {{.}}
-    </div>
-    {{/messages.error}}
-    {{#messages.success}}
-    <div class="alert alert-success">
-      {{.}}
-    </div>
-    {{/messages.success}}
-    <h1>{{title}}</h1>
-    <form action="/auth/api/register" method="post">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-      <button type="submit">Register</button>
-    </form>
+{{> layout }}
+<h1 class="my-4">{{title}}</h1>
+<form action="/auth/api/register" method="post">
+  <div class="form-group">
+    <label for="username">Username:</label>
+    <input type="text" class="form-control" id="username" name="username" required>
   </div>
-  <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
-</body>
-</html>
+  <div class="form-group">
+    <label for="email">Email:</label>
+    <input type="email" class="form-control" id="email" name="email" required>
+  </div>
+  <div class="form-group">
+    <label for="password">Password:</label>
+    <input type="password" class="form-control" id="password" name="password" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Register</button>
+</form>

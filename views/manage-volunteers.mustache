@@ -1,45 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-  {{> partials/header}}
-  <div class="container">
-    {{#messages.error}}
-    <div class="alert alert-danger">
-      {{.}}
+{{> layout }}
+<h1 class="my-4">Manager Dashboard</h1>
+<div class="row">
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Manage Items</h5>
+        <p class="card-text">Add, update, or delete items in stock.</p>
+        <a href="/manage-items" class="btn btn-primary">Go to Manage Items</a>
+      </div>
     </div>
-    {{/messages.error}}
-    {{#messages.success}}
-    <div class="alert alert-success">
-      {{.}}
-    </div>
-    {{/messages.success}}
-    <h1>Manage Volunteers</h1>
-    <form action="/manage-volunteers/api" method="post">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" placeholder="Username" required>
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" placeholder="Email" required>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" placeholder="Password" required>
-      <button type="submit">Add Volunteer</button>
-    </form>
-    <ul>
-      {{#users}}
-      <li>{{username}} - {{email}}
-        <form action="/manage-volunteers/api/{{_id}}" method="post" style="display:inline;">
-          <input type="hidden" name="_method" value="DELETE">
-          <button type="submit">Delete</button>
-        </form>
-      </li>
-      {{/users}}
-    </ul>
   </div>
-  <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
-</body>
-</html>
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Manage Volunteers</h5>
+        <p class="card-text">Add or remove volunteers.</p>
+        <a href="/manage-volunteers" class="btn btn-primary">Go to Manage Volunteers</a>
+      </div>
+    </div>
+  </div>
+</div>

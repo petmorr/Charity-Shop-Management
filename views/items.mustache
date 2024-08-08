@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{title}}</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body>
-  {{> partials/header}}
-  <div class="container">
-    <h1>{{title}}</h1>
-    <ul>
-      {{#items}}
-      <li>{{name}} - {{description}} - £{{price}} - Available at {{store}}</li>
-      {{/items}}
-    </ul>
+{{> layout}}
+<h1 class="my-4">{{title}}</h1>
+<div class="row">
+  {{#items}}
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="card h-100">
+      <img class="card-img-top" src="{{image}}" alt="{{name}}">
+      <div class="card-body">
+        <h4 class="card-title">{{name}}</h4>
+        <p class="card-text">{{description}}</p>
+        <h5>£{{price}}</h5>
+        <p class="card-text"><small class="text-muted">Available at {{store}}</small></p>
+      </div>
+    </div>
   </div>
-  <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
-</body>
-</html>
+  {{/items}}
+</div>

@@ -1,4 +1,5 @@
 const express = require('express');
+const { check, validationResult } = require('express-validator');
 const usersDb = require('../models/user');
 const router = express.Router();
 
@@ -19,7 +20,17 @@ router.get('/', (req, res) => {
 });
 
 // API route to handle adding a new volunteer
-router.post('/api', (req, res) => {
+router.post('/api', [
+  check('username').trim().isLength({ min: 3 }).escape().withMessage('Username must be at least 3 characters long'),
+  check('email').isEmail().normalizeEmail().withMessage('Please enter a valid email'),
+  check('password').isLength({ min: 5 }).escape().withMessage('Password must be at least 5 characters long')
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash('error', errors.array().map(error => error.msg).join('. '));
+    return res.redirect('/manage-volunteers');
+  }
+
   const { username, password, email } = req.body;
   usersDb.insert({ username, password, email, role: 'volunteer' }, (err, user) => {
     if (err) {
@@ -40,7 +51,7 @@ router.delete('/api/:id', (req, res) => {
       return res.redirect('/manage-volunteers');
     }
     req.flash('success', 'Volunteer deleted successfully.');
-    res.sendStatus(200);
+    res.redirect('/manage-volunteers');
   });
 });
 
