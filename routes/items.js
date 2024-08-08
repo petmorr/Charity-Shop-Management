@@ -34,4 +34,12 @@ router.delete('/:id', (req, res) => {
   });
 });
 
+router.get('/search', (req, res) => {
+  const query = req.query.query;
+  itemsDb.find({ name: new RegExp(query, 'i') }, (err, items) => {
+    if (err) return res.status(500).send(err);
+    res.render('items', { title: 'Search Results', items: items });
+  });
+});
+
 module.exports = router;
