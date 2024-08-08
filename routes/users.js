@@ -1,21 +1,17 @@
 const express = require('express');
-const usersDb = require('../models/user');
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  const newUser = req.body;
-  usersDb.insert(newUser, (err, user) => {
-    if (err) return res.status(500).send(err);
-    res.status(201).send(user);
+module.exports = (usersDb) => {
+  // Define your routes for users here, e.g.,
+  router.get('/', (req, res) => {
+    usersDb.find({}, (err, users) => {
+      if (err) {
+        console.error('Error fetching users:', err);
+        return res.status(500).send(err);
+      }
+      res.render('users', { title: 'Users', users: users });
+    });
   });
-});
 
-router.delete('/:id', (req, res) => {
-  const userId = req.params.id;
-  usersDb.remove({ _id: userId }, {}, (err, numRemoved) => {
-    if (err) return res.status(500).send(err);
-    res.sendStatus(200);
-  });
-});
-
-module.exports = router;
+  return router;
+};

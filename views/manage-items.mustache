@@ -31,9 +31,12 @@
         <img src="{{image}}" alt="{{name}}" style="max-width: 100px; margin-right: 20px;">
         <strong>{{name}}</strong> - {{description}} - £{{price}} - Available at {{store}}
       </div>
-      <form action="/manage-items/api/{{_id}}?_method=DELETE" method="post" class="ml-auto">
-        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-      </form>
+      <div>
+        <a href="/manage-items/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
+        <form action="/manage-items/api/{{_id}}?_method=DELETE" method="post" class="d-inline">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </div>
     </div>
   </li>
   {{/items}}

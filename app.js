@@ -7,10 +7,40 @@ const mustacheExpress = require('mustache-express');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const multer = require('multer');
+const fs = require('fs');
+const winston = require('winston');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Configure winston
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`)
+  ),
+  transports: [
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' })
+  ]
+});
+
+// Ensure the data directory exists
+const dataDir = path.join(__dirname, 'data');
+if (!fs.existsSync(dataDir)) {
+  logger.info('Creating data directory');
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+logger.info(`Data directory: ${dataDir} ${fs.existsSync(dataDir)}`);
+
+// Ensure the uploads directory exists
+const uploadsDir = path.join(__dirname, 'public/uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+logger.info(`Uploads directory: ${uploadsDir} ${fs.existsSync(uploadsDir)}`);
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -31,22 +61,25 @@ app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
-// Ensure the data directory exists
-const fs = require('fs');
-const dataDir = path.join(__dirname, process.env.DB_PATH);
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir);
-}
+// Initialize databases with error handling
+const itemsDb = require('./models/item');
+const usersDb = require('./models/user');
 
-// Ensure the uploads directory exists
-const uploadsDir = path.join(__dirname, 'public/uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-}
+itemsDb.loadDatabase((err) => {
+  if (err) {
+    logger.error('Error loading items database:', err);
+    process.exit(1); // Exit the application if the database cannot be loaded
+  }
+  logger.info('Items database loaded successfully.');
+});
 
-// Set up databases
-const itemsDb = new NeDB({ filename: path.join(dataDir, 'items.db'), autoload: true });
-const usersDb = new NeDB({ filename: path.join(dataDir, 'users.db'), autoload: true });
+usersDb.loadDatabase((err) => {
+  if (err) {
+    logger.error('Error loading users database:', err);
+    process.exit(1); // Exit the application if the database cannot be loaded
+  }
+  logger.info('Users database loaded successfully.');
+});
 
 // View engine setup
 app.engine('mustache', mustacheExpress());
@@ -62,20 +95,26 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/', require('./routes/index'));
-app.use('/items', require('./routes/items'));
-app.use('/users', require('./routes/users'));
-app.use('/auth', require('./routes/auth'));
+app.use('/', require('./routes/index')(itemsDb));
+app.use('/items', require('./routes/items')(itemsDb));
+app.use('/users', require('./routes/users')(usersDb));
+app.use('/auth', require('./routes/auth')(usersDb));
 app.use('/dashboard', require('./routes/dashboard'));
-app.use('/manage-items', require('./routes/manage-items')(upload)); // Pass upload middleware here
-app.use('/manage-volunteers', require('./routes/manage-volunteers'));
+app.use('/manage-items', require('./routes/manage-items')(upload, itemsDb));
+app.use('/manage-volunteers', require('./routes/manage-volunteers')(usersDb));
 
 // Home route
 app.get('/', (req, res) => {
   res.redirect('/about');
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  logger.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  logger.info(`Server is running on port ${PORT}`);
 });
