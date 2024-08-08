@@ -7,7 +7,7 @@ router.post('/login', (req, res) => {
   usersDb.findOne({ username, password }, (err, user) => {
     if (err || !user) return res.status(401).send('Login failed');
     req.session.user = user;
-    res.redirect('/dashboard');
+    res.redirect('/dashboard'); // Or wherever you want to redirect after login
   });
 });
 
