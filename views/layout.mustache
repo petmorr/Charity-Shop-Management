@@ -8,7 +8,43 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-  {{> partials/header}}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Charity Shop</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/items">Items</a>
+        </li>
+        {{#user}}
+        <li class="nav-item">
+          <a class="nav-link" href="/dashboard">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/manage-items">Manage Items</a>
+        </li>
+        {{#manager}}
+        <li class="nav-item">
+          <a class="nav-link" href="/manage-volunteers">Manage Volunteers</a>
+        </li>
+        {{/manager}}
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/logout">Logout</a>
+        </li>
+        {{/user}}
+        {{^user}}
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/login">Login</a>
+        </li>
+        {{/user}}
+      </ul>
+    </div>
+  </nav>
   <div class="container mt-4">
     {{#messages.error}}
     <div class="alert alert-danger">
@@ -22,7 +58,11 @@
     {{/messages.success}}
     {{{body}}}
   </div>
-  {{> partials/footer}}
+  <footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+      <span class="text-muted">© 2024 Charity Shop. All rights reserved.</span>
+    </div>
+  </footer>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

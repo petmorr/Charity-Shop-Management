@@ -1,47 +1,25 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+const { check } = require('express-validator');
 const router = express.Router();
+const authController = require('../controllers/authController');
 
-module.exports = (usersDb) => {
-  // Login page
-  router.get('/login', (req, res) => {
-    res.render('login', { title: 'Login' });
-  });
+module.exports = (usersDb, logger) => {
+  router.get('/login', (req, res) => authController.getLogin(req, res));
 
-  // Handle login
   router.post('/api/login', [
     check('username').trim().notEmpty().withMessage('Username is required').escape(),
     check('password').trim().notEmpty().withMessage('Password is required').escape()
-  ], (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      req.flash('error', errors.array().map(error => error.msg).join('. '));
-      return res.redirect('/auth/login');
-    }
+  ], (req, res) => authController.postLogin(req, res, usersDb, logger));
 
-    const { username, password } = req.body;
-    usersDb.findOne({ username, password }, (err, user) => {
-      if (err || !user) {
-        req.flash('error', 'Login failed. Please check your credentials and try again.');
-        return res.redirect('/auth/login');
-      }
-      req.session.user = user;
-      req.flash('success', 'Login successful.');
-      res.redirect('/dashboard');
-    });
-  });
+  router.get('/register', (req, res) => authController.getRegister(req, res));
 
-  // Handle logout
-  router.get('/logout', (req, res) => {
-    req.flash('success', 'Logged out successfully.');
-    req.session.destroy((err) => {
-      if (err) {
-        req.flash('error', 'Failed to logout. Please try again.');
-        return res.redirect('/dashboard');
-      }
-      res.redirect('/auth/login');
-    });
-  });
+  router.post('/api/register', [
+    check('username').trim().notEmpty().withMessage('Username is required').escape(),
+    check('password').trim().isLength({ min: 6 }).withMessage('Password must be at least 6 characters long').escape(),
+    check('email').isEmail().withMessage('Invalid email address').normalizeEmail()
+  ], (req, res) => authController.postRegister(req, res, usersDb, logger));
+
+  router.get('/logout', (req, res) => authController.logout(req, res, logger));
 
   return router;
 };

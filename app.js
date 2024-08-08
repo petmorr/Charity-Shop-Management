@@ -22,6 +22,7 @@ const logger = winston.createLogger({
     winston.format.printf(({ timestamp, level, message }) => `${timestamp} ${level}: ${message}`)
   ),
   transports: [
+    new winston.transports.Console(),
     new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
     new winston.transports.File({ filename: 'logs/combined.log' })
   ]
@@ -56,10 +57,10 @@ const upload = multer({ storage });
 // Middleware setup
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true }));
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(methodOverride('_method'));
 
 // Initialize databases with error handling
 const itemsDb = require('./models/item');
@@ -68,7 +69,7 @@ const usersDb = require('./models/user');
 itemsDb.loadDatabase((err) => {
   if (err) {
     logger.error('Error loading items database:', err);
-    process.exit(1); // Exit the application if the database cannot be loaded
+    process.exit(1);
   }
   logger.info('Items database loaded successfully.');
 });
@@ -76,7 +77,7 @@ itemsDb.loadDatabase((err) => {
 usersDb.loadDatabase((err) => {
   if (err) {
     logger.error('Error loading users database:', err);
-    process.exit(1); // Exit the application if the database cannot be loaded
+    process.exit(1);
   }
   logger.info('Users database loaded successfully.');
 });
@@ -95,13 +96,11 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use('/', require('./routes/index')(itemsDb));
-app.use('/items', require('./routes/items')(itemsDb));
-app.use('/users', require('./routes/users')(usersDb));
-app.use('/auth', require('./routes/auth')(usersDb));
-app.use('/dashboard', require('./routes/dashboard'));
-app.use('/manage-items', require('./routes/manage-items')(upload, itemsDb));
-app.use('/manage-volunteers', require('./routes/manage-volunteers')(usersDb));
+app.use('/', require('./routes/index')(itemsDb, logger));
+app.use('/auth', require('./routes/auth')(usersDb, logger));
+app.use('/dashboard', require('./routes/dashboard')(logger));
+app.use('/manage-items', require('./routes/manage-items')(upload, itemsDb, logger));
+app.use('/manage-volunteers', require('./routes/manage-volunteers')(usersDb, logger));
 
 // Home route
 app.get('/', (req, res) => {
@@ -111,7 +110,9 @@ app.get('/', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   logger.error(err.stack);
-  res.status(500).send('Something broke!');
+  if (!res.headersSent) {
+    res.status(500).send('Something broke!');
+  }
 });
 
 // Start the server

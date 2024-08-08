@@ -1,22 +1,54 @@
 {{> layout }}
-<h1 class="my-4">Manager Dashboard</h1>
-<div class="row">
-  <div class="col-md-4">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Manage Items</h5>
-        <p class="card-text">Add, update, or delete items in stock.</p>
-        <a href="/manage-items" class="btn btn-primary">Go to Manage Items</a>
-      </div>
-    </div>
+<div class="container mt-4">
+  <h1>Manage Volunteers</h1>
+  {{#messages.error}}
+  <div class="alert alert-danger">
+    {{.}}
   </div>
-  <div class="col-md-4">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Manage Volunteers</h5>
-        <p class="card-text">Add or remove volunteers.</p>
-        <a href="/manage-volunteers" class="btn btn-primary">Go to Manage Volunteers</a>
-      </div>
-    </div>
+  {{/messages.error}}
+  {{#messages.success}}
+  <div class="alert alert-success">
+    {{.}}
   </div>
+  {{/messages.success}}
+
+  <h2>Add Volunteer</h2>
+  <form action="/manage-volunteers/add" method="POST">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Volunteer</button>
+  </form>
+
+  <h2>Current Volunteers</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#volunteers}}
+      <tr>
+        <td>{{username}}</td>
+        <td>
+          <form action="/manage-volunteers/delete/{{_id}}" method="POST" style="display:inline;">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger">Remove</button>
+          </form>
+        </td>
+      </tr>
+      {{/volunteers}}
+    </tbody>
+  </table>
 </div>
