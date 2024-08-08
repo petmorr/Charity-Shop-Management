@@ -1,0 +1,19 @@
+{{> header}}
+<h1>Manage Items</h1>
+<form action="/items" method="post">
+  <input type="text" name="name" placeholder="Item Name">
+  <input type="text" name="description" placeholder="Item Description">
+  <input type="number" name="price" placeholder="Item Price">
+  <input type="text" name="store" placeholder="Store">
+  <button type="submit">Add Item</button>
+</form>
+<ul>
+  {{#items}}
+  <li>{{name}} - {{description}} - £{{price}} - Available at {{store}}
+    <form action="/items/{{_id}}" method="post" style="display:inline;">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {{/items}}
+</ul>

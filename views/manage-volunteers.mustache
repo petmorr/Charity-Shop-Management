@@ -1,0 +1,17 @@
+{{> header}}
+<h1>Manage Volunteers</h1>
+<form action="/users" method="post">
+  <input type="text" name="username" placeholder="Username">
+  <input type="password" name="password" placeholder="Password">
+  <button type="submit">Add Volunteer</button>
+</form>
+<ul>
+  {{#users}}
+  <li>{{username}}
+    <form action="/users/{{_id}}" method="post" style="display:inline;">
+      <input type="hidden" name="_method" value="DELETE">
+      <button type="submit">Delete</button>
+    </form>
+  </li>
+  {{/users}}
+</ul>

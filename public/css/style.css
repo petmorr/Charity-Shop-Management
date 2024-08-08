@@ -1,0 +1,13 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+header nav ul {
+    list-style: none;
+    padding: 0;
+}
+  
+header nav ul li {
+    display: inline;
+    margin-right: 10px;
+}  
