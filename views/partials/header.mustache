@@ -4,12 +4,14 @@
       <li><a href="/about">About Us</a></li>
       <li><a href="/items">Items in Stock</a></li>
       {{#user}}
+      <li><a href="/dashboard">Dashboard</a></li>
       <li><a href="/manage-items">Manage Items</a></li>
       <li><a href="/manage-volunteers">Manage Volunteers</a></li>
       <li><a href="/auth/logout">Logout</a></li>
       {{/user}}
       {{^user}}
       <li><a href="/auth/login">Login</a></li>
+      <li><a href="/auth/register">Register</a></li>
       {{/user}}
     </ul>
   </nav>

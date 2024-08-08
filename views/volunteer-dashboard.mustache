@@ -10,13 +10,10 @@
   {{> partials/header}}
   <div class="container">
     <h1>{{title}}</h1>
-    <form action="/auth/api/login" method="post">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-      <button type="submit">Login</button>
-    </form>
+    <p>Welcome, {{user.username}}!</p>
+    <ul>
+      <li><a href="/manage-items">Manage Items</a></li>
+    </ul>
   </div>
   <footer class="footer">Charity Shop Inventory System &copy; 2024</footer>
 </body>
