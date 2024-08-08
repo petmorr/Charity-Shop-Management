@@ -3,14 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Items</title>
+  <title>{{title}}</title>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
   {{> partials/header}}
   <div class="container">
+    {{#messages.error}}
+    <div class="alert alert-danger">
+      {{.}}
+    </div>
+    {{/messages.error}}
+    {{#messages.success}}
+    <div class="alert alert-success">
+      {{.}}
+    </div>
+    {{/messages.success}}
     <h1>Manage Items</h1>
-    <form action="/items" method="post">
+    <form action="/manage-items/api" method="post">
       <label for="name">Item Name:</label>
       <input type="text" id="name" name="name" placeholder="Item Name" required>
       <label for="description">Item Description:</label>
@@ -24,8 +34,7 @@
     <ul>
       {{#items}}
       <li>{{name}} - {{description}} - £{{price}} - Available at {{store}}
-        <form action="/items/{{_id}}" method="post" style="display:inline;">
-          <input type="hidden" name="_method" value="DELETE">
+        <form action="/manage-items/api/{{_id}}?_method=DELETE" method="post" style="display:inline;">
           <button type="submit">Delete</button>
         </form>
       </li>

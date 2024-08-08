@@ -6,7 +6,9 @@
       {{#user}}
       <li><a href="/dashboard">Dashboard</a></li>
       <li><a href="/manage-items">Manage Items</a></li>
+      {{#manager}}
       <li><a href="/manage-volunteers">Manage Volunteers</a></li>
+      {{/manager}}
       <li><a href="/auth/logout">Logout</a></li>
       {{/user}}
       {{^user}}

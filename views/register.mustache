@@ -9,6 +9,16 @@
 <body>
   {{> partials/header}}
   <div class="container">
+    {{#messages.error}}
+    <div class="alert alert-danger">
+      {{.}}
+    </div>
+    {{/messages.error}}
+    {{#messages.success}}
+    <div class="alert alert-success">
+      {{.}}
+    </div>
+    {{/messages.success}}
     <h1>{{title}}</h1>
     <form action="/auth/api/register" method="post">
       <label for="username">Username:</label>
