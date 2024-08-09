@@ -41,7 +41,7 @@ This is a web-based application designed to manage and showcase the items availa
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/charity-shop-management.git
+    git clone https://github.com/petmorr/charity-shop-management.git
     cd charity-shop-management
     ```
 
