@@ -13,8 +13,14 @@ data/
 # Other files to ignore
 .DS_Store
 
-#Repo Cleanup
+#Repo cleanup
 bfg-1.14.0.jar
 
-#Git Directory
+#Git directory
 Web-CW2.git/
+
+#Logs directory
+logs/
+
+#Uploads directory
+public/uploads/
