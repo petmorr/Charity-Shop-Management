@@ -13,7 +13,7 @@
   {{/messages.success}}
 
   <h2>Add Volunteer</h2>
-  <form action="/manage-volunteers/add" method="POST">
+  <form action="/manage-volunteers/api/add" method="POST">
     <div class="form-group">
       <label for="username">Username</label>
       <input type="text" class="form-control" id="username" name="username" required>
@@ -42,7 +42,7 @@
       <tr>
         <td>{{username}}</td>
         <td>
-          <form action="/manage-volunteers/delete/{{_id}}" method="POST" style="display:inline;">
+          <form action="/manage-volunteers/api/delete/{{_id}}" method="POST" style="display:inline;">
             <input type="hidden" name="_method" value="DELETE">
             <button type="submit" class="btn btn-danger">Remove</button>
           </form>

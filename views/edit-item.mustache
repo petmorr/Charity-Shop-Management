@@ -1,41 +1,48 @@
 {{> layout }}
-<div class="container mt-4">
-  <h1>Edit Item</h1>
-  {{#messages.error}}
-  <div class="alert alert-danger">
-    {{.}}
+<h1 class="my-4">{{title}}</h1>
+
+<form action="/manage-items/api/edit/{{item._id}}" method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="name">Item Name</label>
+    <input type="text" class="form-control" id="name" name="name" value="{{item.name}}" required>
   </div>
-  {{/messages.error}}
-  {{#messages.success}}
-  <div class="alert alert-success">
-    {{.}}
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" name="description" required>{{item.description}}</textarea>
   </div>
-  {{/messages.success}}
-  <form action="/manage-items/api/{{item._id}}" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="_method" value="PUT">
-    <div class="form-group">
-      <label for="name">Item Name</label>
-      <input type="text" class="form-control" id="name" name="name" value="{{item.name}}" required>
+  <div class="form-group">
+    <label for="price">Price</label>
+    <input type="number" class="form-control" id="price" name="price" value="{{item.price}}" required>
+  </div>
+  <div class="form-group">
+    <label for="store">Store</label>
+    <input type="text" class="form-control" id="store" name="store" value="{{item.store}}" required>
+  </div>
+  <div class="form-group">
+    <label for="image">Image</label>
+    <input type="file" class="form-control-file" id="image" name="image">
+    {{#item.image}}
+    <p>Current Image: <img src="{{item.image}}" alt="{{item.name}}" style="max-width: 100px;"></p>
+    {{/item.image}}
+  </div>
+  <button type="submit" class="btn btn-primary">Update Item</button>
+</form>
+
+<ul class="list-group mt-4">
+  {{#items}}
+  <li class="list-group-item">
+    <div class="d-flex justify-content-between">
+      <div>
+        <img src="{{image}}" alt="{{name}}" style="max-width: 100px; margin-right: 20px;">
+        <strong>{{name}}</strong> - {{description}} - £{{price}} - Available at {{store}}
+      </div>
+      <div>
+        <a href="/manage-items/manage-items/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
+        <form action="/manage-items/api/{{_id}}?_method=DELETE" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </div>
     </div>
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea class="form-control" id="description" name="description" required>{{item.description}}</textarea>
-    </div>
-    <div class="form-group">
-      <label for="price">Price</label>
-      <input type="number" step="0.01" class="form-control" id="price" name="price" value="{{item.price}}" required>
-    </div>
-    <div class="form-group">
-      <label for="store">Store</label>
-      <input type="text" class="form-control" id="store" name="store" value="{{item.store}}" required>
-    </div>
-    <div class="form-group">
-      <label for="image">Image</label>
-      <input type="file" class="form-control-file" id="image" name="image">
-      {{#item.image}}
-      <p>Current Image: <img src="{{item.image}}" alt="{{item.name}}" style="max-width: 100px;"></p>
-      {{/item.image}}
-    </div>
-    <button type="submit" class="btn btn-primary">Update Item</button>
-  </form>
-</div>
+  </li>
+  {{/items}}
+</ul>
