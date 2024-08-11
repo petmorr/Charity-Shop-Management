@@ -1,12 +1,9 @@
 # Testing Report
-
-## Web Application Development 2 - Coursework 2
-
 ---
 
 ## 1. Overview
 
-This report documents the testing of the web application developed for a local hospice charity. The application allows each of its four charity shops to showcase its current in-store products. The application includes functionalities for both volunteers and managers to manage items and users. The testing was conducted to ensure that all features worked as expected and meet the specified requirements.
+This report documents the testing of the web application developed for a local hospice charity. The application allows each of its four charity shops to showcase its current in-store products. It includes functionalities for both volunteers and managers to manage items and users. The testing was conducted to ensure that all features worked as expected and met the specified requirements.
 
 ## 2. Features Implemented
 
@@ -29,31 +26,62 @@ This report documents the testing of the web application developed for a local h
 ## 3. Test Scope
 
 Functional testing was carried out for the following modules:
+1. **Landing Page & About Us**
+2. **Authentication (Login, Logout, Registration)**
+3. **Item Management (Add, Edit, Delete Items)**
+4. **Volunteer Management (Add, Edit, Delete Volunteers)**
+5. **Role-Based Access Control**
+6. **Edge Case Handling**
 
-1. **Landing Page (index.html)**
-2. **About Us Page**
-3. **Item Management (View, Add, Edit, Delete)**
-4. **User Management (Add, Delete)**
-5. **Authentication (Login, Logout, Registration)**
-
-## 4. Test Cases
-
+##4. Test Cases
+### 1. User Role Tests
 | Test ID | Action | Expected Outcome | Status | Evidence |
 |---------|--------|------------------|--------|----------|
-| 1.1 | Navigate to `localhost:3000` | Landing page loads with navigation links to "About Us", "Items" and "Login" | OK | ![image](https://github.com/user-attachments/assets/f57f94ed-9d86-4e65-8db0-819729cb85c3) |
-| 1.2 | Click "About Us" | About Us page loads with charity details and shop locations | OK | ![image](https://github.com/user-attachments/assets/fd0c4b87-d4c6-4d85-9355-21c8e508a2b5) |
-| 2.1 | Navigate to `localhost:3000/items` | Items page loads with a list of items, including name, description, price, and store location | OK | ![image](https://github.com/user-attachments/assets/ca1d1c2d-03ab-4a40-9490-7a8f888598ea) |
-| 2.2 | Login as a volunteer | Redirects to the volunteer dashboard | OK | Screenshot 4 |
-| 2.3 | Add new item as a volunteer | Item is added to the store and displayed on the items page | OK | Screenshot 5 |
-| 2.4 | Edit an existing item | Item details are updated and displayed correctly | OK | Screenshot 6 |
-| 2.5 | Delete an item | Item is removed from the store and no longer displayed on the items page | OK | Screenshot 7 |
-| 3.1 | Login as a manager | Redirects to the manager dashboard | OK | ![image](https://github.com/user-attachments/assets/1d05bfe7-4fb6-4df6-97e0-e77e63b4625e) |
-| 3.2 | Add a volunteer user | A New user is added and can log in as a volunteer | OK | ![image](https://github.com/user-attachments/assets/8495eb06-7cab-4c74-8fb6-086c8e1364b7) |
-| 3.3 | Delete a volunteer user | Volunteer is removed from the system and can no longer log in | OK | ![image](https://github.com/user-attachments/assets/c93f2a0f-e1cc-48fb-a3ee-791e31aa1563) |
-| 4.1 | Register a new user | User is created and redirected to the login page | OK | Screenshot 11 |
-| 4.2 | Attempt to register with an existing username | Error message displayed and the user is prompted to choose a different username | OK | Screenshot 12 |
-| 4.3 | Logout as a volunteer | User is logged out and redirected to the login page | OK | Screenshot 13 |
-| 5.1 | Unauthorized access to the manager dashboard | User is redirected to the login page with an error message | OK | Screenshot 14 |
+| 1.1     | Log in as a manager and access the dashboard | Manager dashboard loads successfully | OK | ![image](https://github.com/user-attachments/assets/1d05bfe7-4fb6-4df6-97e0-e77e63b4625e) |
+| 1.2     | Log in as a volunteer and access the dashboard | Volunteer dashboard loads successfully | OK | ![image](https://github.com/user-attachments/assets/cc22aea7-f07d-4393-9f37-585f1f7f6757) |
+| 1.3     | Attempt to access the manage volunteers page as a volunteer | Access denied with an appropriate error message | OK | ![image](https://github.com/user-attachments/assets/1f2dc544-355b-434d-9a1c-41641f319881) |
+| 1.4     | Attempt to access manage items as a manager | Access allowed, manage items page loads successfully | OK | ![image](https://github.com/user-attachments/assets/c5db7699-ec80-4058-bdc9-62455096be35) |
+
+### 2. Authentication Tests
+| Test ID | Action | Expected Outcome | Status | Evidence |
+|---------|--------|------------------|--------|----------|
+| 2.1     | Log in with valid credentials | Successful login, redirected to the dashboard | OK | ![image](https://github.com/user-attachments/assets/45a1719d-b1b0-4a39-b902-de51805ef29a) |
+| 2.2     | Log in with invalid credentials | Access denied, appropriate error message shown | OK | ![image](https://github.com/user-attachments/assets/0dd7a6c5-a1ba-4e23-b6f4-c07eee8e9007) |
+| 2.3     | Attempt to log out | Successful logout, redirected to the login page | OK | ![image](https://github.com/user-attachments/assets/72c963ff-ebba-41b1-aaff-0b47f2fafa58) |
+
+### 3. Item Management Tests
+| Test ID | Action | Expected Outcome | Status | Evidence |
+|---------|--------|------------------|--------|----------|
+| 3.1     | Add a new item with all required details | Item added successfully, visible in the item list | OK | ![image](https://github.com/user-attachments/assets/7abebc47-b8fe-43d1-9200-17e628c2c6f1) |
+| 3.2     | Edit an existing item’s details | Item updated successfully, changes visible in the item list | OK |![image](https://github.com/user-attachments/assets/7840f2bc-0104-4001-b420-ec01f7d3a9ab) |
+| 3.3     | Delete an existing item | Item removed from the database and no longer visible in the item list | OK | ![image](https://github.com/user-attachments/assets/f056d497-ef82-4736-a6aa-258e11511029) |
+| 3.4     | Add an item with missing required fields | Addition fails, error message displayed | OK | ![image](https://github.com/user-attachments/assets/0548bef9-9385-4f3f-8579-2ca2faccd71b) |
+| 3.5     | Add an item with invalid data types (e.g., text in the price field) | Addition fails, the error message displayed | OK | ![image](https://github.com/user-attachments/assets/ca4c866b-a79d-4058-b4da-621f96d3d246) |
+
+### 4. Volunteer Management Tests
+| Test ID | Action | Expected Outcome | Status | Evidence |
+|---------|--------|------------------|--------|----------|
+| 4.1     | Add a new volunteer with valid details | Volunteer added successfully, visible in the volunteer list | OK | ![image](https://github.com/user-attachments/assets/acbea806-5330-4507-82bb-930358137f50) |
+| 4.2     | Edit an existing volunteer’s details | Volunteer updated successfully, changes visible in the volunteer list | OK | Screenshot/Logs |
+| 4.3     | Delete an existing volunteer | Volunteer removed from the database and no longer visible in the volunteer list | OK | ![image](https://github.com/user-attachments/assets/12b949c2-aba2-4459-be71-6536f9f23b28) |
+| 4.4     | Add a volunteer with a duplicate username | Addition fails, error message displayed | OK | ![image](https://github.com/user-attachments/assets/84d0496b-e094-4d0b-8a60-6275ac90b567) |
+| 4.5     | Add a volunteer with missing required fields | Addition fails, error message displayed | OK | ![image](https://github.com/user-attachments/assets/f389f0aa-55e2-414d-ab87-7db7d40f014a) |
+
+### 5. Access Control Tests
+| Test ID | Action | Expected Outcome | Status | Evidence |
+|---------|--------|------------------|--------|----------|
+| 5.1     | Access the manage items page without logging in | Redirected to the login page | OK | ![image](https://github.com/user-attachments/assets/91f45f39-1315-4ca2-99e5-a4a7e877203a) |
+| 5.2     | Access the manage volunteers page as a volunteer | Access denied with an appropriate error message | OK | ![image](https://github.com/user-attachments/assets/c53cc094-d964-4fb1-99d2-c4c01ad6660f) |
+| 5.3     | Access the manage volunteers page as a manager | Access allowed, manage volunteers page loads successfully | OK | ![image](https://github.com/user-attachments/assets/ea4214c8-984a-4c1f-91e1-b82a0524df5d) |
+| 5.4     | Log in and access the dashboard | Access granted, appropriate dashboard loads based on role | OK | ![image](https://github.com/user-attachments/assets/a508302c-df9a-4394-90c8-95affdff9657) |
+
+### 6. Edge Case Tests
+| Test ID | Action | Expected Outcome | Status | Evidence |
+|---------|--------|------------------|--------|----------|
+| 6.1     | Attempt to add an item with an exceptionally long name or description | Addition fails, error message displayed | OK | Screenshot/Logs |
+| 6.2     | Attempt to log in with SQL injection in the username field | Login fails, system handles the input safely | OK | Screenshot/Logs |
+| 6.3     | Attempt to access a protected route after logging out | Redirected to login page, no access to the protected route | OK | Screenshot/Logs |
+| 6.4     | Simulate a database error while retrieving items | Appropriate error message displayed, system remains stable | OK | Screenshot/Logs |
 
 ## 5. Summary of Test Results
 
@@ -79,8 +107,6 @@ Functional testing was carried out for the following modules:
 
 The web application has been rigorously tested, and all implemented features function correctly according to the specified requirements. The test coverage includes typical use cases, edge cases, and potential error scenarios. The system meets the specifications and is ready for deployment.
 
-**Recommendation:** Given the robustness of the implemented features and the comprehensive test coverage, the application is expected to perform well in a real-world environment. Regular maintenance and updates are recommended to address any future issues.
-
 ---
 
 ## Appendices
@@ -91,4 +117,4 @@ The web application has been rigorously tested, and all implemented features fun
 
 ---
 
-This testing report is part of the submission for the Web Application Development 2 coursework, contributing to 70% of the overall module grade. The report has been compiled to demonstrate the comprehensive testing conducted to ensure the functionality and reliability of the developed web application.
+This testing report is part of the submission for the Web Application Development 2 coursework, contributing 70% of the overall module grade. It has been compiled to demonstrate the comprehensive testing conducted to ensure the functionality and reliability of the developed web application.
