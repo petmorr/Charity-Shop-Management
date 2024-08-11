@@ -1,4 +1,4 @@
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 
 // Controller function to handle GET request for managing items
 exports.getManageItems = (req, res, itemsDb, logger) => {
