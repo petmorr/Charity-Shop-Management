@@ -1,125 +1,127 @@
 /* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #F8F9FA;
-    color: #343A40;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+  color: #343a40;
 }
 
 header {
-    background-color: #0056b3;
-    color: #fff;
-    padding: 10px 0;
-    text-align: center;
+  background-color: #0056b3;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
 }
 
 header nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 15px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
 }
 
 header nav ul li {
-    display: inline;
+  display: inline;
 }
 
 header nav ul li a {
-    color: #0056b3;
-    text-decoration: none;
-    padding: 5px 10px;
-    transition: background-color 0.3s, color 0.3s;
+  color: #0056b3;
+  text-decoration: none;
+  padding: 5px 10px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 header nav ul li a:hover {
-    background-color: #28A745;
-    color: #fff;
-    border-radius: 5px;
+  background-color: #28a745;
+  color: #fff;
+  border-radius: 5px;
 }
 
 .container {
-    width: 80%;
-    margin: 20px auto;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #0056b3;
-    text-align: center;
+  color: #0056b3;
+  text-align: center;
 }
 
 form {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 form label {
-    display: block;
-    margin: 10px 0 5px;
+  display: block;
+  margin: 10px 0 5px;
 }
 
 form input[type="text"],
 form input[type="number"],
 form input[type="password"],
 form input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 form button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #28A745;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 form button:hover {
-    background-color: #218838;
+  background-color: #218838;
 }
 
 ul {
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
 }
 
 ul li {
-    background: #f9f9f9;
-    margin: 10px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+  background: #f9f9f9;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 
 ul li form {
-    display: inline;
+  display: inline;
 }
 
 ul li form button {
-    display: inline-block;
-    width: auto;
-    margin-left: 10px;
+  display: inline-block;
+  width: auto;
+  margin-left: 10px;
 }
 
 .footer {
-    background-color: #6C757D;
-    color: #fff;
-    text-align: center;
-    padding: 10px 0;
-    position: fixed;
-    width: 100%;
-    bottom: 0;
+  background-color: #6c757d;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
 }

@@ -1,17 +1,6 @@
 {{> layout }}
+<h1 class="my-4">{{title}}</h1>
 <div class="container mt-4">
-  <h1>Manage Volunteers</h1>
-  {{#messages.error}}
-  <div class="alert alert-danger">
-    {{.}}
-  </div>
-  {{/messages.error}}
-  {{#messages.success}}
-  <div class="alert alert-success">
-    {{.}}
-  </div>
-  {{/messages.success}}
-
   <h2>Add Volunteer</h2>
   <form action="/manage-volunteers/api/add" method="POST">
     <div class="form-group">

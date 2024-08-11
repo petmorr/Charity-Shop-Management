@@ -40,28 +40,32 @@ This is a web-based application designed to manage and showcase the items availa
 ### Steps
 
 1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/petmorr/charity-shop-management.git
-    cd charity-shop-management
-    ```
+
+   ```bash
+   git clone https://github.com/petmorr/charity-shop-management.git
+   cd charity-shop-management
+   ```
 
 2. **Install dependencies:**
-    ```bash
-    npm install
-    ```
+
+   ```bash
+   npm install
+   ```
 
 3. **Set up environment variables:**
 
    Create a `.env` file in the root directory and add the following variables:
-    ```
-    SESSION_SECRET=your_secret_key
-    PORT=3000
-    ```
+
+   ```
+   SESSION_SECRET=your_secret_key
+   PORT=3000
+   ```
 
 4. **Run the application:**
-    ```bash
-    nodemon app.js
-    ```
+
+   ```bash
+   nodemon app.js
+   ```
 
 5. **Access the application:**
 
