@@ -7,28 +7,38 @@ const itemsDb = new NeDB({
 });
 
 // Function to add a new item
-exports.addItem = (item, callback) => {
+itemsDb.addItem = (item, callback) => {
   itemsDb.insert(item, callback);
 };
 
 // Function to find an item by its ID
-exports.findItemById = (id, callback) => {
+itemsDb.findItemById = (id, callback) => {
   itemsDb.findOne({ _id: id }, callback);
 };
 
 // Function to update an item by its ID
-exports.updateItem = (id, updatedItem, callback) => {
+itemsDb.updateItem = (id, updatedItem, callback) => {
   itemsDb.update({ _id: id }, { $set: updatedItem }, {}, callback);
 };
 
 // Function to delete an item by its ID
-exports.deleteItem = (id, callback) => {
+itemsDb.deleteItem = (id, callback) => {
   itemsDb.remove({ _id: id }, {}, callback);
 };
 
 // Function to get all items
-exports.getAllItems = (callback) => {
+itemsDb.getAllItems = (callback) => {
   itemsDb.find({}, callback);
+};
+
+// Function to find items by store
+itemsDb.findItemsByStore = (store, callback) => {
+  itemsDb.find({ store }, callback);
+};
+
+// Function to find items by owner
+itemsDb.findItemsByOwner = (owner, callback) => {
+  itemsDb.find({ owner }, callback);
 };
 
 module.exports = itemsDb;

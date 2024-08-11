@@ -1,122 +1,95 @@
-const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const { v4: uuidv4 } = require("uuid");
+const { validationResult } = require("express-validator");
 
 exports.getLogin = (req, res) => {
   res.render("login", { title: "Login" });
-};
-
-exports.postLogin = (req, res, usersDb, logger) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    req.flash(
-      "error",
-      errors
-        .array()
-        .map((error) => error.msg)
-        .join(". "),
-    );
-    logger.warn("Validation errors on login:", { errors: errors.array() });
-    return res.redirect("/auth/login");
-  }
-
-  const { username, password } = req.body;
-
-  usersDb.findOne({ username }, (err, user) => {
-    if (err || !user) {
-      req.flash("error", "Invalid username or password");
-      logger.warn("Invalid login attempt", { username });
-      return res.redirect("/auth/login");
-    }
-
-    bcrypt.compare(password, user.password, (err, result) => {
-      if (result) {
-        req.session.user = user;
-        req.flash("success", "Successfully logged in");
-        logger.info("User logged in successfully:", { username });
-        return res.redirect("/dashboard");
-      } else {
-        req.flash("error", "Invalid username or password");
-        logger.warn("Invalid login attempt", { username });
-        return res.redirect("/auth/login");
-      }
-    });
-  });
 };
 
 exports.getRegister = (req, res) => {
   res.render("register", { title: "Register" });
 };
 
-exports.postRegister = (req, res, usersDb, logger) => {
+exports.postLogin = async (req, res, usersDb, logger) => {
+  const { username, password } = req.body;
+  try {
+    usersDb.findUserByUsername(username, (err, user) => {
+      if (err) {
+        logger.error(`Error during login: ${err.message}`);
+        return res.status(500).send("Internal Server Error");
+      }
+      if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.userId = user._id;
+        req.session.user = user; // Store user data in session
+        req.flash("success", "Successfully logged in");
+        return res.redirect("/dashboard");
+      } else {
+        req.flash("error", "Invalid username or password");
+        return res.redirect("/auth/login");
+      }
+    });
+  } catch (error) {
+    logger.error(`Error during login: ${error.message}`);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+exports.postRegister = async (req, res, usersDb, logger) => {
+  const { username, password, email } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash(
       "error",
       errors
         .array()
-        .map((error) => error.msg)
+        .map((err) => err.msg)
         .join(". "),
     );
-    logger.warn("Validation errors on register:", { errors: errors.array() });
     return res.redirect("/auth/register");
   }
 
-  const newUser = {
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
-    role: "volunteer",
-  };
-
-  usersDb.findOne({ username: newUser.username }, (err, user) => {
-    if (err) {
-      req.flash("error", "Failed to register. Please try again.");
-      logger.error("Error checking username:", err);
-      return res.redirect("/auth/register");
-    }
-
-    if (user) {
-      req.flash("error", "Username already exists");
-      logger.warn("Attempt to register duplicate username:", {
-        username: newUser.username,
-      });
-      return res.redirect("/auth/register");
-    }
-
-    bcrypt.hash(newUser.password, saltRounds, (err, hash) => {
+  try {
+    usersDb.findUserByUsername(username, (err, existingUser) => {
       if (err) {
-        req.flash("error", "Failed to register. Please try again.");
-        logger.error("Failed to hash password:", err);
-        return res.redirect("/auth/register");
+        logger.error(`Error during registration: ${err.message}`);
+        return res.status(500).send("Internal Server Error");
       }
-
-      newUser.password = hash;
-
-      usersDb.insert(newUser, (err, newDoc) => {
-        if (err) {
-          req.flash("error", "Failed to register. Please try again.");
-          logger.error("Failed to register user:", err);
-          return res.redirect("/auth/register");
-        }
-        req.flash("success", "Registration successful, please login");
-        logger.info("User registered successfully:", { newDoc });
-        return res.redirect("/auth/login");
-      });
+      if (existingUser) {
+        req.flash("error", "Username already exists");
+        return res.redirect("/auth/register");
+      } else {
+        const hashedPassword = bcrypt.hashSync(password, 10);
+        const newUser = {
+          _id: uuidv4(),
+          username,
+          password: hashedPassword,
+          email,
+          role: "volunteer", // default role
+        };
+        usersDb.addUser(newUser, (err, user) => {
+          if (err) {
+            logger.error(`Error during registration: ${err.message}`);
+            return res.status(500).send("Internal Server Error");
+          }
+          req.flash("success", "Registration successful, please login");
+          return res.redirect("/auth/login");
+        });
+      }
     });
-  });
+  } catch (error) {
+    logger.error(`Error during registration: ${error.message}`);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 exports.logout = (req, res, logger) => {
-  if (req.session) {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).send("Error during logout");
-      } else {
-        return res.redirect("/auth/login");
-      }
-    });
-  } else {
-    return res.redirect("/auth/login");
-  }
+  req.session.destroy((err) => {
+    if (err) {
+      logger.error(`Error during logout: ${err.message}`);
+      res.status(500).send("Internal Server Error");
+    } else {
+      req.flash("success", "Successfully logged out");
+      res.redirect("/");
+    }
+  });
 };
