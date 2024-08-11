@@ -105,15 +105,3 @@ Functional testing was carried out for the following modules:
 ## 6. Conclusion
 
 The web application has been rigorously tested, and all implemented features function correctly according to the specified requirements. The test coverage includes typical use cases, edge cases, and potential error scenarios. The system meets the specifications and is ready for deployment.
-
----
-
-## Appendices
-
-- **Screenshots:** Refer to the attached screenshots for visual evidence of test results.
-- **Test Data:** Detailed information about the test data used during testing.
-- **Error Logs:** A summary of any error logs generated during testing, along with resolutions.
-
----
-
-This testing report is part of the submission for the Web Application Development 2 coursework, contributing 70% of the overall module grade. It has been compiled to demonstrate the comprehensive testing conducted to ensure the functionality and reliability of the developed web application.
