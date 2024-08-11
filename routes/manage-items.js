@@ -1,59 +1,53 @@
 const express = require("express");
 const { check } = require("express-validator");
 const router = express.Router();
-const itemController = require("../controllers/itemController");
+const manageItemsController = require("../controllers/itemController");
 
 module.exports = (upload, itemsDb, logger) => {
   router.get("/", (req, res) =>
-    itemController.getManageItems(req, res, itemsDb, logger),
+    manageItemsController.getManageItems(req, res, itemsDb, logger),
   );
 
   router.post(
-    "/api",
+    "/api/add",
     upload.single("image"),
     [
-      check("name").trim().notEmpty().withMessage("Name is required").escape(),
+      check("name")
+        .isLength({ max: 30 })
+        .withMessage("Item name cannot exceed 100 characters."),
       check("description")
-        .trim()
-        .notEmpty()
-        .withMessage("Description is required")
-        .escape(),
-      check("price").isNumeric().withMessage("Price must be a number"),
-      check("store")
-        .trim()
-        .notEmpty()
-        .withMessage("Store is required")
-        .escape(),
+        .isLength({ max: 100 })
+        .withMessage("Description cannot exceed 500 characters."),
+      check("price")
+        .isFloat({ min: 1 })
+        .withMessage("Price must be at least 1."),
     ],
-    (req, res) => itemController.postAddItem(req, res, itemsDb, logger),
+    (req, res) => manageItemsController.postAddItem(req, res, itemsDb, logger),
   );
 
-  router.delete("/api/:id", (req, res) =>
-    itemController.deleteItem(req, res, itemsDb, logger),
+  router.post("/api/delete/:id", (req, res) =>
+    manageItemsController.deleteItem(req, res, itemsDb, logger),
   );
 
   router.get("/edit/:id", (req, res) =>
-    itemController.getEditItem(req, res, itemsDb, logger),
+    manageItemsController.getEditItem(req, res, itemsDb, logger),
   );
 
   router.post(
     "/api/edit/:id",
     upload.single("image"),
     [
-      check("name").trim().notEmpty().withMessage("Name is required").escape(),
+      check("name")
+        .isLength({ max: 30 })
+        .withMessage("Item name cannot exceed 100 characters."),
       check("description")
-        .trim()
-        .notEmpty()
-        .withMessage("Description is required")
-        .escape(),
-      check("price").isNumeric().withMessage("Price must be a number"),
-      check("store")
-        .trim()
-        .notEmpty()
-        .withMessage("Store is required")
-        .escape(),
+        .isLength({ max: 100 })
+        .withMessage("Description cannot exceed 500 characters."),
+      check("price")
+        .isFloat({ min: 1 })
+        .withMessage("Price must be at least 1."),
     ],
-    (req, res) => itemController.postEditItem(req, res, itemsDb, logger),
+    (req, res) => manageItemsController.postEditItem(req, res, itemsDb, logger),
   );
 
   return router;

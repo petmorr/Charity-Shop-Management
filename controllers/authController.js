@@ -83,13 +83,16 @@ exports.postRegister = async (req, res, usersDb, logger) => {
 };
 
 exports.logout = (req, res, logger) => {
-  req.session.destroy((err) => {
-    if (err) {
-      logger.error(`Error during logout: ${err.message}`);
-      res.status(500).send("Internal Server Error");
-    } else {
-      req.flash("success", "Successfully logged out");
-      res.redirect("/");
-    }
-  });
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        logger.error("Failed to destroy session:", err);
+        return res.redirect("/dashboard");
+      } else {
+        res.redirect("/auth/login");
+      }
+    });
+  } else {
+    res.redirect("/auth/login");
+  }
 };

@@ -1,7 +1,6 @@
 {{> layout }}
-<h1 class="my-4">Edit Volunteer</h1>
-
-<form action="/manage-volunteers/edit/{{volunteer._id}}" method="POST">
+<h1 class="my-4">{{title}}</h1>
+<form action="/manage-volunteers/api/edit/{{volunteer._id}}" method="POST">
   <div class="form-group">
     <label for="username">Username</label>
     <input type="text" class="form-control" id="username" name="username" value="{{volunteer.username}}" required>

@@ -21,27 +21,22 @@
     </div>
     <button type="submit" class="btn btn-primary">Add Volunteer</button>
   </form>
-
-  <h2>Current Volunteers</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Username</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{#volunteers}}
-      <tr>
-        <td>{{username}}</td>
-        <td>
-          <a href="/manage-volunteers/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
-          <form action="/manage-volunteers/api/{{_id}}?_method=DELETE" method="post" class="d-inline">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-          </form>
-        </td>
-      </tr>
-      {{/volunteers}}
-    </tbody>
-  </table>
+<ul class="list-group mt-4">
+  {{#items}}
+  <li class="list-group-item">
+    <div class="d-flex justify-content-between">
+      <div>
+        <img src="{{image}}" alt="{{name}}" style="max-width: 100px; margin-right: 20px;">
+        <strong>{{name}}</strong> - {{description}} - £{{price}} - Available at {{store}}
+      </div>
+      <div>
+        <a href="/manage-items/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
+        <form action="/manage-items/api/{{_id}}?_method=DELETE" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+      </div>
+    </div>
+  </li>
+  {{/items}}
+</ul>
 </div>

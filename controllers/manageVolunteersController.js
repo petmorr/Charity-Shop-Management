@@ -21,7 +21,7 @@ exports.getManageVolunteers = (req, res, usersDb, logger) => {
       volunteers,
     });
   });
-}
+};
 
 exports.postAddVolunteer = [
   check("username")
@@ -82,7 +82,10 @@ exports.getEditVolunteer = (req, res, usersDb, logger) => {
   const volunteerId = req.params.id;
   usersDb.findUserById(volunteerId, (err, volunteer) => {
     if (err || !volunteer) {
-      logger.error("Failed to load volunteer for editing:", { volunteerId, err });
+      logger.error("Failed to load volunteer for editing:", {
+        volunteerId,
+        err,
+      });
       req.flash("error", "Failed to load volunteer. Please try again.");
       return res.redirect("/manage-volunteers");
     }
@@ -111,7 +114,9 @@ exports.postEditVolunteer = (req, res, usersDb, logger) => {
         .map((error) => error.msg)
         .join(". "),
     );
-    logger.warn("Validation errors on edit volunteer:", { errors: errors.array() });
+    logger.warn("Validation errors on edit volunteer:", {
+      errors: errors.array(),
+    });
     return res.redirect(`/manage-volunteers/edit/${volunteerId}`);
   }
 
@@ -132,12 +137,21 @@ exports.postEditVolunteer = (req, res, usersDb, logger) => {
       return res.redirect(`/manage-volunteers/edit/${volunteerId}`);
     }
     req.flash("success", "Volunteer updated successfully");
-    logger.info("Volunteer updated successfully:", { volunteerId, updatedVolunteer });
+    logger.info("Volunteer updated successfully:", {
+      volunteerId,
+      updatedVolunteer,
+    });
     return res.redirect("/manage-volunteers");
   });
 };
 
 exports.deleteVolunteer = (req, res, usersDb, logger) => {
+  if (!req.session.user) {
+    req.flash("error", "Unauthorized access");
+    logger.warn("Unauthorized delete attempt");
+    return res.redirect("/auth/login");
+  }
+
   const volunteerId = req.params.id;
   logger.info("Deleting volunteer", { volunteerId });
 

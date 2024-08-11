@@ -15,23 +15,15 @@
   </div>
   <div class="form-group">
     <label for="store">Store</label>
-    <select class="form-control" id="store" name="store" required>
-      <option value="Store 1" {{#item.store}} selected="{{item.store}}" === "Store 1"{{/item.store}}>Store 1</option>
-      <option value="Store 2" {{#item.store}} selected="{{item.store}}" === "Store 2"{{/item.store}}>Store 2</option>
-      <option value="Store 3" {{#item.store}} selected="{{item.store}}" === "Store 3"{{/item.store}}>Store 3</option>
-      <option value="Store 4" {{#item.store}} selected="{{item.store}}" === "Store 4"{{/item.store}}>Store 4</option>
-    </select>
+    <input type="text" class="form-control" id="store" name="store" value="{{item.store}}" required>
   </div>
   <div class="form-group">
-    <label for="image">Image</label>
-    <input type="file" class="form-control-file" id="image" name="image">
-    {{#item.image}}
-    <p>Current Image: <img src="{{item.image}}" alt="{{item.name}}" style="max-width: 100px;"></p>
-    {{/item.image}}
+    <label for="image">Item Image</label>
+    <input type="file" class="form-control" id="image" name="image">
+    <input type="hidden" name="existingImage" value="{{item.image}}">
   </div>
-  <button type="submit" class="btn btn-primary">Update Item</button>
+  <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>
-
 <ul class="list-group mt-4">
   {{#items}}
   <li class="list-group-item">
@@ -41,7 +33,7 @@
         <strong>{{name}}</strong> - {{description}} - £{{price}} - Available at {{store}}
       </div>
       <div>
-        <a href="/manage-items/manage-items/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
+        <a href="/manage-items/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
         <form action="/manage-items/api/{{_id}}?_method=DELETE" method="POST" class="d-inline">
           <button type="submit" class="btn btn-danger btn-sm">Delete</button>
         </form>
