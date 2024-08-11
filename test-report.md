@@ -78,10 +78,9 @@ Functional testing was carried out for the following modules:
 ### 6. Edge Case Tests
 | Test ID | Action | Expected Outcome | Status | Evidence |
 |---------|--------|------------------|--------|----------|
-| 6.1     | Attempt to add an item with an exceptionally long name or description | Addition fails, error message displayed | OK | Screenshot/Logs |
-| 6.2     | Attempt to log in with SQL injection in the username field | Login fails, system handles the input safely | OK | Screenshot/Logs |
-| 6.3     | Attempt to access a protected route after logging out | Redirected to login page, no access to the protected route | OK | Screenshot/Logs |
-| 6.4     | Simulate a database error while retrieving items | Appropriate error message displayed, system remains stable | OK | Screenshot/Logs |
+| 6.1     | Attempt to add an item with an exceptionally long name or description | Addition fails, error message displayed | OK | ![image](https://github.com/user-attachments/assets/3c997aac-f79f-4e4a-a0d3-727653103d7b) |
+| 6.2     | Attempt to log in with SQL injection in the username field | Login fails, system handles the input safely | OK | ![image](https://github.com/user-attachments/assets/13438e92-9889-43a3-a539-82f10cd0494d) |
+| 6.3     | Attempt to access a protected route after logging out | Redirected to login page, no access to the protected route | OK | ![image](https://github.com/user-attachments/assets/56da75a1-3828-41e8-a6bc-8a813c6ae8b0) |
 
 ## 5. Summary of Test Results
 
@@ -106,15 +105,3 @@ Functional testing was carried out for the following modules:
 ## 6. Conclusion
 
 The web application has been rigorously tested, and all implemented features function correctly according to the specified requirements. The test coverage includes typical use cases, edge cases, and potential error scenarios. The system meets the specifications and is ready for deployment.
-
----
-
-## Appendices
-
-- **Screenshots:** Refer to the attached screenshots for visual evidence of test results.
-- **Test Data:** Detailed information about the test data used during testing.
-- **Error Logs:** A summary of any error logs generated during testing, along with resolutions.
-
----
-
-This testing report is part of the submission for the Web Application Development 2 coursework, contributing 70% of the overall module grade. It has been compiled to demonstrate the comprehensive testing conducted to ensure the functionality and reliability of the developed web application.
