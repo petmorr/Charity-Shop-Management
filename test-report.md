@@ -40,8 +40,7 @@ Functional testing was carried out for the following modules:
 
 | Test ID | Action | Expected Outcome | Status | Evidence |
 |---------|--------|------------------|--------|----------|
-| 1.1 | Navigate to `localhost:3000` | Landing page loads with navigation links to "About Us", "Items" and "Login" | OK | ![image](https://github.com/user-attachments/assets/f57f94ed-9d86-4e65-8db0-819729cb85c3)
- |
+| 1.1 | Navigate to `localhost:3000` | Landing page loads with navigation links to "About Us", "Items" and "Login" | OK | ![image](https://github.com/user-attachments/assets/f57f94ed-9d86-4e65-8db0-819729cb85c3) |
 | 1.2 | Click "About Us" | About Us page loads with charity details and shop locations | OK | Screenshot 2 |
 | 2.1 | Navigate to `localhost:3000/items` | Items page loads with a list of items, including name, description, price, and store location | OK | Screenshot 3 |
 | 2.2 | Login as a volunteer | Redirects to the volunteer dashboard | OK | Screenshot 4 |
