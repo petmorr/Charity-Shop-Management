@@ -12,6 +12,7 @@ const winston = require("winston"); // Importing the winston module
 const setupManagerUser = require("./setupManagerUser"); // Importing the setupManagerUser module
 const itemsDb = require("./models/item"); // Importing the items database module
 const usersDb = require("./models/user"); // Importing the users database module
+const bcrypt = require("bcrypt"); // Importing the bcrypt module
 
 require("dotenv").config(); // Loading environment variables
 
