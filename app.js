@@ -118,11 +118,6 @@ app.use(
   require("./routes/manage-volunteers")(usersDb, logger),
 );
 
-// Home route
-app.get("/", (req, res) => {
-  res.redirect("/about");
-});
-
 // Error handling middleware
 app.use((err, req, res, next) => {
   logger.error(err.stack);

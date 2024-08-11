@@ -1,3 +1,17 @@
+exports.getIndex = (req, res, logger) => {
+  try {
+    res.render("index", { title: "Landing Page" });
+    logger.info("Accessed Landing page");
+  } catch (error) {
+    logger.error("Error rendering About Us page:", error);
+    if (!res.headersSent) {
+      res
+        .status(500)
+        .send("An error occurred while rendering the About Us page.");
+    }
+  }
+};
+
 exports.getAbout = (req, res, logger) => {
   try {
     res.render("about", { title: "About Us" });
