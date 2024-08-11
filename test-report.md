@@ -1,21 +1,17 @@
-# Comprehensive Testing Report
+# Testing Report
 
 ## Web Application Development 2 - Coursework 2
-
-**Module Code:** M3I325640 / M3I326794  
-**Module Leader:** Fiona Fairlie  
-**Submission Date:** 12th August 2024  
 
 ---
 
 ## 1. Overview
 
-This report documents the testing of the web application developed for a local hospice charity, aimed at allowing each of its four charity shops to showcase their current in-store products. The application includes functionalities for both volunteers and managers to manage items and users respectively. The testing was conducted to ensure that all features work as expected and meet the specified requirements.
+This report documents the testing of the web application developed for a local hospice charity. The application allows each of its four charity shops to showcase its current in-store products. The application includes functionalities for both volunteers and managers to manage items and users. The testing was conducted to ensure that all features worked as expected and meet the specified requirements.
 
 ## 2. Features Implemented
 
 - **Public Access Features:**
-  - Access to the "About Us" page with details of the charity and its shops.
+  - Access the "About Us" page with details of the charity and its shops.
   - View details of current items in stock, including the name, description, price, and store location.
   
 - **Volunteer Features:**
@@ -44,18 +40,19 @@ Functional testing was carried out for the following modules:
 
 | Test ID | Action | Expected Outcome | Status | Evidence |
 |---------|--------|------------------|--------|----------|
-| 1.1 | Navigate to `localhost:3000` | Landing page loads with navigation links to "About Us" and "Items" | OK | Screenshot 1 |
+| 1.1 | Navigate to `localhost:3000` | Landing page loads with navigation links to "About Us", "Items" and "Login" | OK | ![image](https://github.com/user-attachments/assets/f57f94ed-9d86-4e65-8db0-819729cb85c3)
+ |
 | 1.2 | Click "About Us" | About Us page loads with charity details and shop locations | OK | Screenshot 2 |
-| 2.1 | Navigate to `localhost:3000/items` | Items page loads with list of items, including name, description, price, and store location | OK | Screenshot 3 |
+| 2.1 | Navigate to `localhost:3000/items` | Items page loads with a list of items, including name, description, price, and store location | OK | Screenshot 3 |
 | 2.2 | Login as a volunteer | Redirects to the volunteer dashboard | OK | Screenshot 4 |
 | 2.3 | Add new item as a volunteer | Item is added to the store and displayed on the items page | OK | Screenshot 5 |
 | 2.4 | Edit an existing item | Item details are updated and displayed correctly | OK | Screenshot 6 |
 | 2.5 | Delete an item | Item is removed from the store and no longer displayed on the items page | OK | Screenshot 7 |
 | 3.1 | Login as a manager | Redirects to the manager dashboard | OK | Screenshot 8 |
-| 3.2 | Add a volunteer user | New user is added and can log in as a volunteer | OK | Screenshot 9 |
+| 3.2 | Add a volunteer user | A New user is added and can log in as a volunteer | OK | Screenshot 9 |
 | 3.3 | Delete a volunteer user | Volunteer is removed from the system and can no longer log in | OK | Screenshot 10 |
 | 4.1 | Register a new user | User is created and redirected to the login page | OK | Screenshot 11 |
-| 4.2 | Attempt to register with an existing username | Error message displayed and user is prompted to choose a different username | OK | Screenshot 12 |
+| 4.2 | Attempt to register with an existing username | Error message displayed and the user is prompted to choose a different username | OK | Screenshot 12 |
 | 4.3 | Logout as a volunteer | User is logged out and redirected to the login page | OK | Screenshot 13 |
 | 5.1 | Unauthorized access to the manager dashboard | User is redirected to the login page with an error message | OK | Screenshot 14 |
 
@@ -83,7 +80,7 @@ Functional testing was carried out for the following modules:
 
 The web application has been rigorously tested, and all implemented features function correctly according to the specified requirements. The test coverage includes typical use cases, edge cases, and potential error scenarios. The system meets the specifications and is ready for deployment.
 
-**Recommendation:** Given the robustness of the implemented features and the comprehensive test coverage, the application is expected to perform well in a real-world environment. Regular maintenance and updates are recommended to address any future issues that may arise.
+**Recommendation:** Given the robustness of the implemented features and the comprehensive test coverage, the application is expected to perform well in a real-world environment. Regular maintenance and updates are recommended to address any future issues.
 
 ---
 
