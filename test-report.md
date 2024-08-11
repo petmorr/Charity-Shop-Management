@@ -10,12 +10,12 @@
 
 ## 1. Overview
 
-This report documents the testing of the web application developed for a local hospice charity, aimed at allowing each of its four charity shops to showcase their current in-store products. The application includes functionalities for both volunteers and managers to manage items and users respectively. The testing was conducted to ensure that all features work as expected and meet the specified requirements.
+This report documents the testing of the web application developed for a local hospice charity. The application allows each of its four charity shops to showcase its current in-store products. It includes functionalities for both volunteers and managers to manage items and users. The testing was conducted to ensure that all features worked as expected and met the specified requirements.
 
 ## 2. Features Implemented
 
 - **Public Access Features:**
-  - Access to the "About Us" page with details of the charity and its shops.
+  - Access the "About Us" page with details of the charity and its shops.
   - View details of current items in stock, including the name, description, price, and store location.
 - **Volunteer Features:**
   - Login functionality.
@@ -87,8 +87,6 @@ Functional testing was carried out for the following modules:
 
 The web application has been rigorously tested, and all implemented features function correctly according to the specified requirements. The test coverage includes typical use cases, edge cases, and potential error scenarios. The system meets the specifications and is ready for deployment.
 
-**Recommendation:** Given the robustness of the implemented features and the comprehensive test coverage, the application is expected to perform well in a real-world environment. Regular maintenance and updates are recommended to address any future issues that may arise.
-
 ---
 
 ## Appendices
@@ -99,4 +97,4 @@ The web application has been rigorously tested, and all implemented features fun
 
 ---
 
-This testing report is part of the submission for the Web Application Development 2 coursework, contributing to 70% of the overall module grade. The report has been compiled to demonstrate the comprehensive testing conducted to ensure the functionality and reliability of the developed web application.
+This testing report is part of the submission for the Web Application Development 2 coursework, contributing 70% of the overall module grade. It has been compiled to demonstrate the comprehensive testing conducted to ensure the functionality and reliability of the developed web application.
