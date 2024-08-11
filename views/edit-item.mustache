@@ -16,7 +16,12 @@
   </div>
   <div class="form-group">
     <label for="store">Store</label>
-    <input type="text" class="form-control" id="store" name="store" value="{{item.store}}" required>
+    <select class="form-control" id="store" name="store" required>
+      <option value="Store 1" {{#item.store}} selected="{{item.store}}" === "Store 1"{{/item.store}}>Store 1</option>
+      <option value="Store 2" {{#item.store}} selected="{{item.store}}" === "Store 2"{{/item.store}}>Store 2</option>
+      <option value="Store 3" {{#item.store}} selected="{{item.store}}" === "Store 3"{{/item.store}}>Store 3</option>
+      <option value="Store 4" {{#item.store}} selected="{{item.store}}" === "Store 4"{{/item.store}}>Store 4</option>
+    </select>
   </div>
   <div class="form-group">
     <label for="image">Image</label>

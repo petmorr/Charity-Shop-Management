@@ -2,32 +2,36 @@ const { validationResult } = require('express-validator');
 
 exports.getManageItems = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
-    logger.warn('Unauthorized access to manage items by user:', { user: req.session.user });
-    return res.status(403).json({ error: 'Unauthorized access' });
+    logger.warn('Unauthorized access to manage items');
+    req.flash('error', 'Unauthorized access');
+    return res.redirect('/auth/login');
   }
 
   const query = req.session.user.role === 'manager' ? {} : { owner: req.session.user.username };
 
   itemsDb.find(query, (err, items) => {
     if (err) {
+      req.flash('error', 'Failed to load items. Please try again.');
       logger.error('Error loading items:', err);
-      return res.status(500).json({ error: 'Failed to load items. Please try again.' });
+      return res.redirect('/dashboard');
     }
     logger.info('Displayed manage items page');
-    return res.status(200).json({ items });
+    return res.render('manage-items', { title: 'Manage Items', items });
   });
 };
 
 exports.postAddItem = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
-    logger.warn('Unauthorized add attempt by user:', { user: req.session.user });
-    return res.status(403).json({ error: 'Unauthorized access' });
+    req.flash('error', 'Unauthorized access');
+    logger.warn('Unauthorized add attempt');
+    return res.redirect('/auth/login');
   }
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    req.flash('error', errors.array().map(error => error.msg).join('. '));
     logger.warn('Validation errors on add item:', { errors: errors.array() });
-    return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    return res.redirect('/manage-items');
   }
 
   const newItem = {
@@ -41,18 +45,21 @@ exports.postAddItem = (req, res, itemsDb, logger) => {
 
   itemsDb.insert(newItem, (err, newDoc) => {
     if (err) {
+      req.flash('error', 'Failed to add item. Please try again.');
       logger.error('Failed to add item:', err);
-      return res.status(500).json({ error: 'Failed to add item. Please try again.' });
+      return res.redirect('/manage-items');
     }
+    req.flash('success', 'Item added successfully');
     logger.info('Item added successfully:', { newDoc });
-    return res.status(201).json({ message: 'Item added successfully' });
+    return res.redirect('/manage-items');
   });
 };
 
 exports.deleteItem = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
-    logger.warn('Unauthorized delete attempt by user:', { user: req.session.user });
-    return res.status(403).json({ error: 'Unauthorized access' });
+    req.flash('error', 'Unauthorized access');
+    logger.warn('Unauthorized delete attempt');
+    return res.redirect('/auth/login');
   }
 
   const itemId = req.params.id;
@@ -60,18 +67,21 @@ exports.deleteItem = (req, res, itemsDb, logger) => {
 
   itemsDb.remove(query, {}, (err, numRemoved) => {
     if (err || numRemoved === 0) {
+      req.flash('error', 'Failed to delete item. Please try again.');
       logger.error('Failed to delete item:', { itemId, err });
-      return res.status(500).json({ error: 'Failed to delete item. Please try again.' });
+      return res.redirect('/manage-items');
     }
+    req.flash('success', 'Item deleted successfully');
     logger.info('Item deleted successfully:', { itemId });
-    return res.status(200).json({ message: 'Item deleted successfully' });
+    return res.redirect('/manage-items');
   });
 };
 
 exports.getEditItem = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
-    logger.warn('Unauthorized edit attempt by user:', { user: req.session.user });
-    return res.status(403).json({ error: 'Unauthorized access' });
+    req.flash('error', 'Unauthorized access');
+    logger.warn('Unauthorized edit attempt');
+    return res.redirect('/auth/login');
   }
 
   const itemId = req.params.id;
@@ -79,24 +89,27 @@ exports.getEditItem = (req, res, itemsDb, logger) => {
 
   itemsDb.findOne(query, (err, item) => {
     if (err || !item) {
+      req.flash('error', 'Failed to load item. Please try again.');
       logger.error('Error loading item:', { itemId, err });
-      return res.status(500).json({ error: 'Failed to load item. Please try again.' });
+      return res.redirect('/manage-items');
     }
     logger.info('Displayed edit item page for item:', { item });
-    return res.status(200).json({ item });
+    return res.render('edit-item', { title: 'Edit Item', item });
   });
 };
 
 exports.postEditItem = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
-    logger.warn('Unauthorized edit attempt by user:', { user: req.session.user });
-    return res.status(403).json({ error: 'Unauthorized access' });
+    req.flash('error', 'Unauthorized access');
+    logger.warn('Unauthorized edit attempt');
+    return res.redirect('/auth/login');
   }
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    req.flash('error', errors.array().map(error => error.msg).join('. '));
     logger.warn('Validation errors on edit item:', { errors: errors.array() });
-    return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    return res.redirect(`/manage-items/edit/${req.params.id}`);
   }
 
   const itemId = req.params.id;
@@ -112,10 +125,12 @@ exports.postEditItem = (req, res, itemsDb, logger) => {
 
   itemsDb.update(query, { $set: updatedItem }, {}, (err, numReplaced) => {
     if (err || numReplaced === 0) {
+      req.flash('error', 'Failed to update item. Please try again.');
       logger.error('Failed to update item:', { itemId, err });
-      return res.status(500).json({ error: 'Failed to update item. Please try again.' });
+      return res.redirect(`/manage-items/edit/${itemId}`);
     }
+    req.flash('success', 'Item updated successfully');
     logger.info('Item updated successfully:', { itemId, updatedItem });
-    return res.status(200).json({ message: 'Item updated successfully' });
+    return res.redirect('/manage-items');
   });
 };

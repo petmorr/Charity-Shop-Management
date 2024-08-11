@@ -5,24 +5,27 @@ const saltRounds = 10;
 exports.getManageVolunteers = (req, res, usersDb, logger) => {
   if (!req.session.user || req.session.user.role !== 'manager') {
     logger.warn('Unauthorized access to manage volunteers');
-    return res.status(403).json({ error: 'Unauthorized access' });
+    req.flash('error', 'Unauthorized access');
+    return res.redirect('/dashboard');
   }
 
   usersDb.find({ role: 'volunteer' }, (err, volunteers) => {
     if (err) {
       logger.error('Error loading volunteers:', err);
-      return res.status(500).json({ error: 'Failed to load volunteers. Please try again.' });
+      req.flash('error', 'Failed to load volunteers. Please try again.');
+      return res.redirect('/dashboard');
     }
     logger.info('Displayed manage volunteers page', { volunteers });
-    return res.status(200).json({ volunteers });
+    return res.render('manage-volunteers', { title: 'Manage Volunteers', volunteers });
   });
 };
 
 exports.postAddVolunteer = (req, res, usersDb, logger) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    req.flash('error', errors.array().map(error => error.msg).join('. '));
     logger.warn('Validation errors on add volunteer:', { errors: errors.array() });
-    return res.status(400).json({ error: 'Validation failed', details: errors.array() });
+    return res.redirect('/manage-volunteers');
   }
 
   const newUser = {
@@ -35,18 +38,21 @@ exports.postAddVolunteer = (req, res, usersDb, logger) => {
   usersDb.findOne({ username: newUser.username }, (err, user) => {
     if (err) {
       logger.error('Failed to add volunteer:', err);
-      return res.status(500).json({ error: 'Failed to add volunteer. Please try again.' });
+      req.flash('error', 'Failed to add volunteer. Please try again.');
+      return res.redirect('/manage-volunteers');
     }
 
     if (user) {
+      req.flash('error', 'Username already exists');
       logger.warn('Attempt to add duplicate username:', { username: newUser.username });
-      return res.status(409).json({ error: 'Username already exists' });
+      return res.redirect('/manage-volunteers');
     }
 
     bcrypt.hash(newUser.password, saltRounds, (err, hash) => {
       if (err) {
         logger.error('Failed to hash password:', err);
-        return res.status(500).json({ error: 'Failed to add volunteer. Please try again.' });
+        req.flash('error', 'Failed to add volunteer. Please try again.');
+        return res.redirect('/manage-volunteers');
       }
 
       newUser.password = hash;
@@ -54,10 +60,12 @@ exports.postAddVolunteer = (req, res, usersDb, logger) => {
       usersDb.insert(newUser, (err, newDoc) => {
         if (err) {
           logger.error('Failed to add volunteer:', err);
-          return res.status(500).json({ error: 'Failed to add volunteer. Please try again.' });
+          req.flash('error', 'Failed to add volunteer. Please try again.');
+          return res.redirect('/manage-volunteers');
         }
+        req.flash('success', 'Volunteer added successfully');
         logger.info('Volunteer added successfully:', { newDoc });
-        return res.status(201).json({ message: 'Volunteer added successfully' });
+        return res.redirect('/manage-volunteers');
       });
     });
   });
@@ -69,10 +77,12 @@ exports.deleteVolunteer = (req, res, usersDb, logger) => {
 
   usersDb.remove({ _id: volunteerId, role: 'volunteer' }, {}, (err, numRemoved) => {
     if (err || numRemoved === 0) {
+      req.flash('error', 'Failed to delete volunteer. Please try again.');
       logger.error('Failed to delete volunteer:', { volunteerId, err });
-      return res.status(500).json({ error: 'Failed to delete volunteer. Please try again.' });
+      return res.redirect('/manage-volunteers');
     }
+    req.flash('success', 'Volunteer deleted successfully');
     logger.info('Volunteer deleted successfully:', { volunteerId });
-    return res.status(200).json({ message: 'Volunteer deleted successfully' });
+    return res.redirect('/manage-volunteers');
   });
 };
