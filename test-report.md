@@ -41,15 +41,15 @@ Functional testing was carried out for the following modules:
 | Test ID | Action | Expected Outcome | Status | Evidence |
 |---------|--------|------------------|--------|----------|
 | 1.1 | Navigate to `localhost:3000` | Landing page loads with navigation links to "About Us", "Items" and "Login" | OK | ![image](https://github.com/user-attachments/assets/f57f94ed-9d86-4e65-8db0-819729cb85c3) |
-| 1.2 | Click "About Us" | About Us page loads with charity details and shop locations | OK | Screenshot 2 |
-| 2.1 | Navigate to `localhost:3000/items` | Items page loads with a list of items, including name, description, price, and store location | OK | Screenshot 3 |
+| 1.2 | Click "About Us" | About Us page loads with charity details and shop locations | OK | ![image](https://github.com/user-attachments/assets/fd0c4b87-d4c6-4d85-9355-21c8e508a2b5) |
+| 2.1 | Navigate to `localhost:3000/items` | Items page loads with a list of items, including name, description, price, and store location | OK | ![image](https://github.com/user-attachments/assets/ca1d1c2d-03ab-4a40-9490-7a8f888598ea) |
 | 2.2 | Login as a volunteer | Redirects to the volunteer dashboard | OK | Screenshot 4 |
 | 2.3 | Add new item as a volunteer | Item is added to the store and displayed on the items page | OK | Screenshot 5 |
 | 2.4 | Edit an existing item | Item details are updated and displayed correctly | OK | Screenshot 6 |
 | 2.5 | Delete an item | Item is removed from the store and no longer displayed on the items page | OK | Screenshot 7 |
-| 3.1 | Login as a manager | Redirects to the manager dashboard | OK | Screenshot 8 |
-| 3.2 | Add a volunteer user | A New user is added and can log in as a volunteer | OK | Screenshot 9 |
-| 3.3 | Delete a volunteer user | Volunteer is removed from the system and can no longer log in | OK | Screenshot 10 |
+| 3.1 | Login as a manager | Redirects to the manager dashboard | OK | ![image](https://github.com/user-attachments/assets/1d05bfe7-4fb6-4df6-97e0-e77e63b4625e) |
+| 3.2 | Add a volunteer user | A New user is added and can log in as a volunteer | OK | ![image](https://github.com/user-attachments/assets/8495eb06-7cab-4c74-8fb6-086c8e1364b7) |
+| 3.3 | Delete a volunteer user | Volunteer is removed from the system and can no longer log in | OK | ![image](https://github.com/user-attachments/assets/c93f2a0f-e1cc-48fb-a3ee-791e31aa1563) |
 | 4.1 | Register a new user | User is created and redirected to the login page | OK | Screenshot 11 |
 | 4.2 | Attempt to register with an existing username | Error message displayed and the user is prompted to choose a different username | OK | Screenshot 12 |
 | 4.3 | Logout as a volunteer | User is logged out and redirected to the login page | OK | Screenshot 13 |
