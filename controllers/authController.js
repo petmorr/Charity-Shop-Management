@@ -9,42 +9,28 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res, usersDb, logger) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    req.flash('error', errors.array().map(error => error.msg).join('. '));
     logger.warn('Validation errors on login:', { errors: errors.array() });
-    return res.redirect('/auth/login');
+    return res.status(400).json({ error: 'Validation failed', details: errors.array() });
   }
 
   const { username, password } = req.body;
 
-  usersDb.findOne({ username: username }, (err, user) => {
+  usersDb.findOne({ username }, (err, user) => {
     if (err || !user) {
-      req.flash('error', 'Invalid username or password');
       logger.warn('Invalid login attempt', { username });
-      return res.redirect('/auth/login');
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    // Check if the password is plain text (existing users) or hashed (new users)
-    if (user.password === password) {
-      // Plain text password match for existing user
-      req.session.user = user;
-      req.flash('success', 'Successfully logged in');
-      logger.info('User logged in with plain text password:', { username });
-      return res.redirect('/dashboard');
-    } else {
-      // Compare hashed passwords for new users
-      bcrypt.compare(password, user.password, (err, result) => {
-        if (result) {
-          req.session.user = user;
-          req.flash('success', 'Successfully logged in');
-          logger.info('User logged in with hashed password:', { username });
-          return res.redirect('/dashboard');
-        } else {
-          req.flash('error', 'Invalid username or password');
-          logger.warn('Invalid login attempt', { username });
-          return res.redirect('/auth/login');
-        }
-      });
-    }
+    bcrypt.compare(password, user.password, (err, result) => {
+      if (result) {
+        req.session.user = user;
+        logger.info('User logged in successfully:', { username });
+        return res.status(200).json({ message: 'Successfully logged in' });
+      } else {
+        logger.warn('Invalid login attempt', { username });
+        return res.status(401).json({ error: 'Invalid username or password' });
+      }
+    });
   });
 };
 
@@ -55,53 +41,43 @@ exports.getRegister = (req, res) => {
 exports.postRegister = (req, res, usersDb, logger) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    req.flash('error', errors.array().map(error => error.msg).join('. '));
     logger.warn('Validation errors on register:', { errors: errors.array() });
-    return res.redirect('/auth/register');
+    return res.status(400).json({ error: 'Validation failed', details: errors.array() });
   }
 
   const newUser = {
     username: req.body.username,
     password: req.body.password,
     email: req.body.email,
-    role: 'volunteer' // Default role, can be changed based on your application's logic
+    role: 'volunteer'
   };
 
-  // Check if the username already exists
   usersDb.findOne({ username: newUser.username }, (err, user) => {
     if (err) {
-      req.flash('error', 'Failed to register. Please try again.');
-      logger.error('Failed to register user:', err);
-      return res.redirect('/auth/register');
+      logger.error('Error checking username:', err);
+      return res.status(500).json({ error: 'Failed to register. Please try again.' });
     }
 
     if (user) {
-      req.flash('error', 'Username already exists. Please choose another one.');
       logger.warn('Attempt to register duplicate username:', { username: newUser.username });
-      return res.redirect('/auth/register');
+      return res.status(409).json({ error: 'Username already exists' });
     }
 
-    // Hash the password before saving
     bcrypt.hash(newUser.password, saltRounds, (err, hash) => {
       if (err) {
-        req.flash('error', 'Failed to register. Please try again.');
         logger.error('Failed to hash password:', err);
-        return res.redirect('/auth/register');
+        return res.status(500).json({ error: 'Failed to register. Please try again.' });
       }
 
       newUser.password = hash;
 
-      logger.info('Registering new user', { newUser });
-
       usersDb.insert(newUser, (err, newDoc) => {
         if (err) {
-          req.flash('error', 'Failed to register. Please try again.');
           logger.error('Failed to register user:', err);
-          return res.redirect('/auth/register');
+          return res.status(500).json({ error: 'Failed to register. Please try again.' });
         }
-        req.flash('success', 'User registered successfully.');
         logger.info('User registered successfully:', { newDoc });
-        return res.redirect('/auth/login');
+        return res.status(201).json({ message: 'User registered successfully' });
       });
     });
   });
@@ -112,12 +88,13 @@ exports.logout = (req, res, logger) => {
     req.session.destroy(err => {
       if (err) {
         logger.error('Failed to destroy session:', err);
-        return res.redirect('/dashboard');
+        return res.status(500).json({ error: 'Failed to log out. Please try again.' });
       } else {
-        res.redirect('/auth/login');
+        logger.info('User logged out successfully');
+        return res.status(200).json({ message: 'Successfully logged out' });
       }
     });
   } else {
-    res.redirect('/auth/login');
+    return res.status(404).json({ error: 'No active session found' });
   }
 };

@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../test-server');  // Adjust this path as needed
+const app = require('../test-server');
 
 describe('Authentication Controller Tests', () => {
   test('should render login page', async () => {
@@ -10,7 +10,8 @@ describe('Authentication Controller Tests', () => {
 
   test('should login successfully with correct credentials', async () => {
     const response = await request(app)
-      .post('/auth/login')
+      .post('/auth/api/login')
+      .set('Cookie', `session=${JSON.stringify(userSession)}`)
       .send({ username: 'testuser', password: 'testpassword' });
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toBe('Successfully logged in');
@@ -23,15 +24,20 @@ describe('Authentication Controller Tests', () => {
   });
 
   test('should not register a duplicate user', async () => {
-    const response = await request(app)
-      .post('/auth/register')
+    await request(app)
+      .post('/auth/api/register')
       .send({ username: 'testuser', password: 'newpassword', email: 'testuser@example.com' });
+
+    const response = await request(app)
+      .post('/auth/api/register')
+      .send({ username: 'testuser', password: 'newpassword', email: 'testuser@example.com' });
+
     expect(response.statusCode).toBe(409);
     expect(response.body.error).toBe('Username already exists');
   });
 
   test('should logout successfully', async () => {
-    const response = await request(app).post('/auth/api/logout');
+    const response = await request(app).get('/auth/logout');
     expect(response.statusCode).toBe(200);
     expect(response.body.message).toBe('Successfully logged out');
   });
