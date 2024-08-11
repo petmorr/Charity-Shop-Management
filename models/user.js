@@ -1,6 +1,7 @@
 const NeDB = require("nedb");
 const path = require("path");
 
+// Initialize the database
 const usersDb = new NeDB({
   filename: path.join(__dirname, "../data/users.db"),
   autoload: true,

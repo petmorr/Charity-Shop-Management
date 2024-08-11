@@ -1,5 +1,6 @@
 const { check, validationResult } = require("express-validator");
 
+// Controller function to handle GET request for managing items
 exports.getManageItems = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
     logger.warn("Unauthorized access to manage items");
@@ -7,11 +8,13 @@ exports.getManageItems = (req, res, itemsDb, logger) => {
     return res.redirect("/auth/login");
   }
 
+  // Determine the query based on the user's role
   const query =
     req.session.user.role === "manager"
       ? {}
       : { owner: req.session.user.username };
 
+  // Retrieve all items from the database
   itemsDb.getAllItems((err, items) => {
     if (err) {
       req.flash("error", "Failed to load items. Please try again.");
@@ -23,6 +26,7 @@ exports.getManageItems = (req, res, itemsDb, logger) => {
   });
 };
 
+// Controller function to handle POST request for adding an item
 exports.postAddItem = (req, res, itemsDb, logger) => {
   const errors = validationResult(req);
   if (!req.session.user) {
@@ -31,6 +35,7 @@ exports.postAddItem = (req, res, itemsDb, logger) => {
     return res.redirect("/auth/login");
   }
 
+  // Check for validation errors
   if (!errors.isEmpty()) {
     req.flash(
       "error",
@@ -42,6 +47,7 @@ exports.postAddItem = (req, res, itemsDb, logger) => {
     return res.redirect("/manage-items");
   }
 
+  // Create a new item object with the provided data
   const newItem = {
     name: req.body.name,
     description: req.body.description,
@@ -51,6 +57,7 @@ exports.postAddItem = (req, res, itemsDb, logger) => {
     owner: req.session.user.username,
   };
 
+  // Add the new item to the database
   itemsDb.addItem(newItem, (err, newDoc) => {
     if (err) {
       req.flash("error", "Failed to add item. Please try again.");
@@ -63,6 +70,7 @@ exports.postAddItem = (req, res, itemsDb, logger) => {
   });
 };
 
+// Controller function to handle DELETE request for deleting an item
 exports.deleteItem = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
     req.flash("error", "Unauthorized access");
@@ -70,12 +78,16 @@ exports.deleteItem = (req, res, itemsDb, logger) => {
     return res.redirect("/auth/login");
   }
 
+  // Get the item ID from the request parameters
   const itemId = req.params.id;
+
+  // Determine the query based on the user's role
   const query =
     req.session.user.role === "manager"
       ? { _id: itemId }
       : { _id: itemId, owner: req.session.user.username };
 
+  // Delete the item from the database
   itemsDb.deleteItem(itemId, (err, numRemoved) => {
     if (err || numRemoved === 0) {
       req.flash("error", "Failed to delete item. Please try again.");
@@ -88,6 +100,7 @@ exports.deleteItem = (req, res, itemsDb, logger) => {
   });
 };
 
+// Controller function to handle GET request for editing an item
 exports.getEditItem = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
     req.flash("error", "Unauthorized access");
@@ -95,12 +108,16 @@ exports.getEditItem = (req, res, itemsDb, logger) => {
     return res.redirect("/auth/login");
   }
 
+  // Get the item ID from the request parameters
   const itemId = req.params.id;
+
+  // Determine the query based on the user's role
   const query =
     req.session.user.role === "manager"
       ? { _id: itemId }
       : { _id: itemId, owner: req.session.user.username };
 
+  // Find the item in the database by its ID
   itemsDb.findItemById(itemId, (err, item) => {
     if (err || !item) {
       req.flash("error", "Failed to load item. Please try again.");
@@ -112,6 +129,7 @@ exports.getEditItem = (req, res, itemsDb, logger) => {
   });
 };
 
+// Controller function to handle POST request for updating an item
 exports.postEditItem = (req, res, itemsDb, logger) => {
   if (!req.session.user) {
     req.flash("error", "Unauthorized access.");
@@ -134,7 +152,10 @@ exports.postEditItem = (req, res, itemsDb, logger) => {
     return res.redirect("/manage-items");
   }
 
+  // Get the item ID from the request parameters
   const itemId = req.params.id;
+
+  // Create an updated item object with the provided data
   const updatedItem = {
     name: req.body.name,
     description: req.body.description,
@@ -143,11 +164,13 @@ exports.postEditItem = (req, res, itemsDb, logger) => {
     image: req.file ? `/uploads/${req.file.filename}` : req.body.existingImage,
   };
 
+  // Determine the query based on the user's role
   const query =
     req.session.user.role === "manager"
       ? { _id: itemId }
       : { _id: itemId, owner: req.session.user.username };
 
+  // Update the item in the database
   itemsDb.updateItem(itemId, updatedItem, (err, numReplaced) => {
     if (err || numReplaced === 0) {
       req.flash("error", "Failed to update item. Please try again.");
