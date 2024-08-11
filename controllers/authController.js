@@ -94,13 +94,15 @@ exports.postRegister = (req, res, usersDb, logger) => {
 };
 
 exports.logout = (req, res, logger) => {
-  req.session.destroy(err => {
-    if (err) {
-      logger.error(`Error during logout: ${err.message}`);
-      res.status(500).send('Internal Server Error');
-    } else {
-      req.flash('success', 'Successfully logged out');
-      res.redirect('/auth/login');
-    }
-  });
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        return res.status(500).send('Error during logout');
+      } else {
+        return res.redirect('/auth/login');
+      }
+    });
+  } else {
+    return res.redirect('/auth/login');
+  }
 };
