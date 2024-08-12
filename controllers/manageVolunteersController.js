@@ -1,4 +1,4 @@
-const { check, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
@@ -23,54 +23,40 @@ exports.getManageVolunteers = (req, res, usersDb, logger) => {
   });
 };
 
-exports.postAddVolunteer = [
-  check("username")
-    .isLength({ min: 3 })
-    .withMessage("Username must be at least 3 characters long."),
-  check("email").isEmail().withMessage("Invalid email format."),
-  check("password")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters long."),
-  check("confirmPassword").custom((value, { req }) => {
-    if (value !== req.body.password) {
-      throw new Error("Passwords do not match.");
-    }
-    return true;
-  }),
-  (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      req.flash(
-        "error",
-        errors
-          .array()
-          .map((error) => error.msg)
-          .join(". "),
-      );
-      return res.redirect("/manage-volunteers");
-    }
-    next();
-  },
-  (req, res, usersDb, logger) => {
-    const newUser = {
-      username: req.body.username,
-      password: bcrypt.hashSync(req.body.password, saltRounds),
-      email: req.body.email,
-      role: "volunteer",
-    };
-
-    usersDb.addUser(newUser, (err, newDoc) => {
-      if (err) {
-        req.flash("error", "Failed to add volunteer. Please try again.");
-        logger.error("Failed to add volunteer:", err);
-        return res.redirect("/manage-volunteers");
-      }
-      req.flash("success", "Volunteer added successfully");
-      logger.info("Volunteer added successfully:", { newDoc });
-      return res.redirect("/manage-volunteers");
+exports.postAddVolunteer = (req, res, usersDb, logger) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash(
+      "error",
+      errors
+        .array()
+        .map((error) => error.msg)
+        .join(". "),
+    );
+    logger.warn("Validation errors on edit volunteer:", {
+      errors: errors.array(),
     });
-  },
-];
+    return res.redirect(`/manage-volunteers/edit/${volunteerId}`);
+  }
+
+  const newUser = {
+    username: req.body.username,
+    password: bcrypt.hashSync(req.body.password, saltRounds),
+    email: req.body.email,
+    role: "volunteer",
+  };
+
+  usersDb.addUser(newUser, (err, newDoc) => {
+    if (err) {
+      req.flash("error", "Failed to add volunteer. Please try again.");
+      logger.error("Failed to add volunteer:", err);
+      return res.redirect("/manage-volunteers");
+    }
+    req.flash("success", "Volunteer added successfully");
+    logger.info("Volunteer added successfully:", { newDoc });
+    return res.redirect("/manage-volunteers");
+  });
+};
 
 exports.getEditVolunteer = (req, res, usersDb, logger) => {
   if (!req.session.user || req.session.user.role !== "manager") {

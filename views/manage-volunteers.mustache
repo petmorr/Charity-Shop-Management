@@ -19,24 +19,36 @@
       <label for="email">Email</label>
       <input type="email" class="form-control" id="email" name="email" required>
     </div>
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" class="form-control" id="fullName" name="fullName" required>
+    </div>
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" required>
+    </div>
+    <div class="form-group">
+      <label for="role">Role</label>
+      <input type="text" class="form-control" id="role" name="role" required>
+    </div>
     <button type="submit" class="btn btn-primary">Add Volunteer</button>
   </form>
 <ul class="list-group mt-4">
-  {{#items}}
+  {{#volunteers}}
   <li class="list-group-item">
     <div class="d-flex justify-content-between">
       <div>
-        <img src="{{image}}" alt="{{name}}" style="max-width: 100px; margin-right: 20px;">
-        <strong>{{name}}</strong> - {{description}} - £{{price}} - Available at {{store}}
+        <img src="{{image}}" alt="{{fullName}}" style="max-width: 100px; margin-right: 20px;">
+        <strong>{{fullName}}</strong> - {{role}} - {{email}} - {{phoneNumber}}
       </div>
       <div>
-        <a href="/manage-items/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
-        <form action="/manage-items/api/{{_id}}?_method=DELETE" method="POST" class="d-inline">
+        <a href="/manage-volunteers/edit/{{_id}}" class="btn btn-warning btn-sm mr-2">Edit</a>
+        <form action="/manage-volunteers/api/delete/{{_id}}" method="POST" class="d-inline">
           <button type="submit" class="btn btn-danger btn-sm">Delete</button>
         </form>
       </div>
     </div>
   </li>
-  {{/items}}
+  {{/volunteers}}
 </ul>
 </div>

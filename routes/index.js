@@ -6,17 +6,17 @@ const indexController = require("../controllers/indexController");
 module.exports = (itemsDb, logger) => {
   // Define route for the home page
   router.get("/", (req, res) => indexController.getIndex(req, res, logger));
-  
+
   // Define route for the about page
   router.get("/about", (req, res) =>
     indexController.getAbout(req, res, logger),
   );
-  
+
   // Define route for the items page
   router.get("/items", (req, res) =>
     indexController.getItems(req, res, itemsDb, logger),
   );
-  
+
   // Return the configured router
   return router;
 };
