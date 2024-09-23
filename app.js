@@ -70,7 +70,7 @@ app.use(
     secret: process.env.SESSION_SECRET, // Setting the session secret
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: true, httpOnly: true },
   }),
 );
 app.use(flash()); // Using flash messages
