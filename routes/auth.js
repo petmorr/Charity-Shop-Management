@@ -1,10 +1,17 @@
 const express = require("express");
 const { check } = require("express-validator");
 const authController = require("../controllers/authController");
-
+const rateLimit = require("express-rate-limit");
 const router = express.Router();
 
 module.exports = (usersDb, logger) => {
+  // Rate limiter configuration: maximum of 5 requests per minute
+  const loginLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 5, // limit each IP to 5 requests per windowMs
+    message: "Too many login attempts from this IP, please try again after a minute"
+  });
+
   // Route for displaying the login page
   router.get("/login", (req, res) =>
     authController.getLogin(req, res, usersDb, logger),
@@ -18,6 +25,7 @@ module.exports = (usersDb, logger) => {
   // Route for handling login form submission
   router.post(
     "/api/login",
+    loginLimiter,
     [
       // Validation for username and password fields
       check("username").trim().notEmpty().withMessage("Username is required"),
