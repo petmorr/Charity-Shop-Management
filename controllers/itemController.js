@@ -14,8 +14,16 @@ exports.getManageItems = (req, res, itemsDb, logger) => {
       ? {}
       : { owner: req.session.user.username };
 
-  // Retrieve all items from the database
-  itemsDb.getAllItems((err, items) => {
+  const fetchItems = (callback) => {
+    if (req.session.user.role === "manager") {
+      itemsDb.getAllItems(callback);
+    } else {
+      itemsDb.findItemsByOwner(req.session.user.username, callback);
+    }
+  };
+
+  // Retrieve items from the database
+  fetchItems((err, items) => {
     if (err) {
       req.flash("error", "Failed to load items. Please try again.");
       logger.error("Error loading items:", err);
@@ -81,22 +89,37 @@ exports.deleteItem = (req, res, itemsDb, logger) => {
   // Get the item ID from the request parameters
   const itemId = req.params.id;
 
-  // Determine the query based on the user's role
-  const query =
-    req.session.user.role === "manager"
-      ? { _id: itemId }
-      : { _id: itemId, owner: req.session.user.username };
-
-  // Delete the item from the database
-  itemsDb.deleteItem(itemId, (err, numRemoved) => {
-    if (err || numRemoved === 0) {
-      req.flash("error", "Failed to delete item. Please try again.");
-      logger.error("Failed to delete item:", { itemId, err });
+  // Verify ownership if the user is not a manager
+  itemsDb.findItemById(itemId, (err, item) => {
+    if (err || !item) {
+      req.flash("error", "Failed to find item.");
+      logger.error("Failed to find item before deletion:", { itemId, err });
       return res.redirect("/manage-items");
     }
-    req.flash("success", "Item deleted successfully");
-    logger.info("Item deleted successfully:", { itemId });
-    return res.redirect("/manage-items");
+
+    if (
+      req.session.user.role !== "manager" &&
+      item.owner !== req.session.user.username
+    ) {
+      req.flash("error", "Unauthorized access");
+      logger.warn("Unauthorized delete attempt by user:", {
+        user: req.session.user.username,
+        itemId,
+      });
+      return res.redirect("/manage-items");
+    }
+
+    // Delete the item from the database
+    itemsDb.deleteItem(itemId, (err2, numRemoved) => {
+      if (err2 || numRemoved === 0) {
+        req.flash("error", "Failed to delete item. Please try again.");
+        logger.error("Failed to delete item:", { itemId, err: err2 });
+        return res.redirect("/manage-items");
+      }
+      req.flash("success", "Item deleted successfully");
+      logger.info("Item deleted successfully:", { itemId });
+      return res.redirect("/manage-items");
+    });
   });
 };
 
@@ -111,17 +134,23 @@ exports.getEditItem = (req, res, itemsDb, logger) => {
   // Get the item ID from the request parameters
   const itemId = req.params.id;
 
-  // Determine the query based on the user's role
-  const query =
-    req.session.user.role === "manager"
-      ? { _id: itemId }
-      : { _id: itemId, owner: req.session.user.username };
-
   // Find the item in the database by its ID
   itemsDb.findItemById(itemId, (err, item) => {
     if (err || !item) {
       req.flash("error", "Failed to load item. Please try again.");
       logger.error("Error loading item:", { itemId, err });
+      return res.redirect("/manage-items");
+    }
+
+    if (
+      req.session.user.role !== "manager" &&
+      item.owner !== req.session.user.username
+    ) {
+      req.flash("error", "Unauthorized access");
+      logger.warn("Unauthorized edit attempt by user:", {
+        user: req.session.user.username,
+        itemId,
+      });
       return res.redirect("/manage-items");
     }
     logger.info("Displayed edit item page for item:", { item });
@@ -164,21 +193,36 @@ exports.postEditItem = (req, res, itemsDb, logger) => {
     image: req.file ? `/uploads/${req.file.filename}` : req.body.existingImage,
   };
 
-  // Determine the query based on the user's role
-  const query =
-    req.session.user.role === "manager"
-      ? { _id: itemId }
-      : { _id: itemId, owner: req.session.user.username };
-
-  // Update the item in the database
-  itemsDb.updateItem(itemId, updatedItem, (err, numReplaced) => {
-    if (err || numReplaced === 0) {
-      req.flash("error", "Failed to update item. Please try again.");
-      logger.error("Failed to update item:", { itemId, err });
-      return res.redirect(`/manage-items/edit/${itemId}`);
+  // Verify ownership if the user is not a manager
+  itemsDb.findItemById(itemId, (err, item) => {
+    if (err || !item) {
+      req.flash("error", "Failed to load item.");
+      logger.error("Failed to load item before update:", { itemId, err });
+      return res.redirect("/manage-items");
     }
-    req.flash("success", "Item updated successfully");
-    logger.info("Item updated successfully:", { itemId, updatedItem });
-    return res.redirect("/manage-items");
+
+    if (
+      req.session.user.role !== "manager" &&
+      item.owner !== req.session.user.username
+    ) {
+      req.flash("error", "Unauthorized access");
+      logger.warn("Unauthorized update attempt by user:", {
+        user: req.session.user.username,
+        itemId,
+      });
+      return res.redirect("/manage-items");
+    }
+
+    // Update the item in the database
+    itemsDb.updateItem(itemId, updatedItem, (err2, numReplaced) => {
+      if (err2 || numReplaced === 0) {
+        req.flash("error", "Failed to update item. Please try again.");
+        logger.error("Failed to update item:", { itemId, err: err2 });
+        return res.redirect(`/manage-items/edit/${itemId}`);
+      }
+      req.flash("success", "Item updated successfully");
+      logger.info("Item updated successfully:", { itemId, updatedItem });
+      return res.redirect("/manage-items");
+    });
   });
 };

@@ -24,6 +24,12 @@ exports.getManageVolunteers = (req, res, usersDb, logger) => {
 };
 
 exports.postAddVolunteer = (req, res, usersDb, logger) => {
+  if (!req.session.user || req.session.user.role !== "manager") {
+    logger.warn("Unauthorized add attempt");
+    req.flash("error", "Unauthorized access");
+    return res.redirect("/dashboard");
+  }
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     req.flash(
@@ -33,10 +39,10 @@ exports.postAddVolunteer = (req, res, usersDb, logger) => {
         .map((error) => error.msg)
         .join(". "),
     );
-    logger.warn("Validation errors on edit volunteer:", {
+    logger.warn("Validation errors on add volunteer:", {
       errors: errors.array(),
     });
-    return res.redirect(`/manage-volunteers/edit/${volunteerId}`);
+    return res.redirect("/manage-volunteers");
   }
 
   const newUser = {

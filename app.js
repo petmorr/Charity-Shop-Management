@@ -9,6 +9,7 @@ const methodOverride = require("method-override"); // Importing the method-overr
 const multer = require("multer"); // Importing the multer module
 const fs = require("fs"); // Importing the fs module
 const winston = require("winston"); // Importing the winston module
+const helmet = require("helmet"); // Importing helmet for security
 const setupManagerUser = require("./setupManagerUser"); // Importing the setupManagerUser module
 const itemsDb = require("./models/item"); // Importing the items database module
 const usersDb = require("./models/user"); // Importing the users database module
@@ -62,6 +63,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Middleware setup
+app.use(helmet()); // Add secure HTTP headers
 app.use(bodyParser.json()); // Parsing JSON bodies
 app.use(bodyParser.urlencoded({ extended: true })); // Parsing URL-encoded bodies
 app.use(methodOverride("_method")); // Allowing HTTP methods override
@@ -69,8 +71,11 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET, // Setting the session secret
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true, httpOnly: true },
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+    },
   }),
 );
 app.use(flash()); // Using flash messages
